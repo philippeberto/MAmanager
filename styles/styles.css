@@ -1,0 +1,88 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;1,400&display=swap');
+
+  
+html{
+  font-family: 'Roboto', sans-serif;
+  height: 87vh;
+}
+
+body{
+  margin: 0 0 60px;
+  height: 87vh;
+}
+
+.header{
+  background-color: #fafafa;
+  padding: 10px;
+  text-align: right;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+.pesquisa{
+  text-align: left;
+}
+
+.login{
+  margin-right: 8px;
+  margin-left: 8px;
+  font-weight: 300;
+}
+
+aside.sidebar{
+  float: left;
+  background-color: rgb(82, 82, 82);
+  z-index: 40;
+  width: 15%;
+  height: 100%;
+}
+
+
+p.sidebar {
+  padding-left: 24px;
+  padding-right: 12px;
+  padding-top: 6px;
+  padding-bottom: 6px;
+	text-align: left;
+  list-style-type: none;
+  color: white;
+}
+
+p.sidebar:hover{
+  background-color: lightgray;
+  color: black;
+}
+
+.conteudo{
+  min-height: 87vh;
+}
+
+.principal{
+  overflow: auto;
+  height: 87vh;
+  position: relative;
+  max-width: 80%;
+  margin-left: auto;
+  scrollbar-width: thin;
+  scrollbar-color: orange orange;
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-track {
+  background: #fafafa;
+}
+::-webkit-scrollbar-thumb {
+  background-color: orange;
+  border-radius: 20px;
+  border: 3px solid orange;
+}
+
+.footer{
+  background-color: #eeeeee;
+  text-align: center;
+  padding: 8px;
+  padding: 10px;
+  border-top: black;
+  border-width: 8px;
+}
