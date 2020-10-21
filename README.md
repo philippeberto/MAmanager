@@ -1,4 +1,4 @@
-- Projeto front-end de um sistema de gestão para uma academia de artes marciais
+Projeto front-end de um sistema de gestão para uma academia de artes marciais
 
 Requisitos Funcionais
 
