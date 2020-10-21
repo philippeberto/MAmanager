@@ -1,60 +1,58 @@
 import React from 'react'
 import Link from 'next/link'
+import auth0 from '../../lib/auth0'
 
-const Sidebar = () => {
+const Sidebar = (props) => {
   return (
-    <div >
-      <aside className='sidebar conteudo'>
+    <aside className="sidebar-image">
+      <Link href="/usuario">
+        <a>
+          <div className="sidebar">Usuário</div>
+        </a>
+      </Link>
 
-        <Link href="/usuario">
-          <p className='sidebar'>
-            Usuário
-          </p>
-        </Link>
+      <Link href="/app">
+        <a>
+          <div className="sidebar">Dashboard</div>
+        </a>
+      </Link>
 
-        <Link href="/home" >
-          <p className='sidebar'>
-            Dashboard
-          </p>
-        </Link>
+      <Link href="/alunos">
+        <a>
+          <div className="sidebar">Alunos</div>
+        </a>
+      </Link>
 
-        <Link href="/alunos" >
-          <p className='sidebar'>
-            Alunos
-          </p>
-        </Link>
+      <Link href="/mensalidades">
+        <a>
+          <div className="sidebar">Mensalidades</div>
+        </a>
+      </Link>
 
-        <Link href="/mensalidades" >
-          <p className='sidebar'>
-            Mensalidades
-          </p>
-        </Link>
+      <Link href="/vendas">
+        <a>
+          <div className="sidebar">Vendas</div>
+        </a>
+      </Link>
 
-        <Link href="/vendas" >
-          <p className='sidebar'>
-            Vendas
-          </p>
-        </Link>
+      <Link href="/compras">
+        <a>
+          <div className="sidebar">Compras</div>
+        </a>
+      </Link>
 
-        <Link href="/compras" >
-          <p className='sidebar'>
-            Compras
-          </p>
-        </Link>
+      <Link href="/despesas">
+        <a>
+          <div className="sidebar">Despesas</div>
+        </a>
+      </Link>
 
-        <Link href="/despesas" >
-          <p className='sidebar'>
-            Despesas
-          </p>
-        </Link>
-
-        <Link href="/seguros" >
-          <p className='sidebar'>
-            Seguros
-          </p>
-        </Link>
-      </aside>
-    </div>
+      <Link href="/seguros">
+        <a>
+          <div className="sidebar">Seguros</div>
+        </a>
+      </Link>
+    </aside>
   )
 }
 

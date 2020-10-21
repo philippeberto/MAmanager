@@ -1,88 +1,185 @@
 @import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;1,400&display=swap');
 
-  
-html{
+html {
   font-family: 'Roboto', sans-serif;
   height: 87vh;
 }
 
-body{
-  margin: 0 0 60px;
+body {
+  margin: 0 0 0;
   height: 87vh;
-}
-
-.header{
   background-color: #fafafa;
-  padding: 10px;
+}
+
+a:link {
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: none;
+}
+
+.header {
+  display: flex;
+  background-color: #f3f3f3;
+  padding: 4px;
+  margin-left: 6px;
   text-align: right;
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
+    0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  align-items: center;
 }
 
-.pesquisa{
-  text-align: left;
+.logo {
+  height: 38px;
 }
 
-.login{
+.login {
+  margin-right: 8px;
+  margin-left: auto;
+  font-weight: 300;
+}
+.logout {
   margin-right: 8px;
   margin-left: 8px;
   font-weight: 300;
 }
 
-aside.sidebar{
+.sidebar-image {
+  background-image: url(../public/img/sidebar-background.png);
   float: left;
-  background-color: rgb(82, 82, 82);
-  z-index: 40;
-  width: 15%;
-  height: 100%;
+  width: 160px;
+  background-color: #791111;
+  overflow: auto;
+  height: 86.5vh;
+  margin-bottom: auto;
 }
 
-
-p.sidebar {
+.sidebar {
   padding-left: 24px;
   padding-right: 12px;
-  padding-top: 6px;
-  padding-bottom: 6px;
-	text-align: left;
-  list-style-type: none;
+  padding-top: 18px;
+  padding-bottom: 18px;
+  text-align: left;
   color: white;
+  font-size: 16px;
+  font-weight: 300;
+  border-bottom: 1px solid gray;
 }
 
-p.sidebar:hover{
-  background-color: lightgray;
-  color: black;
+.ultimoitem {
+  margin-bottom: 100px;
 }
 
-.conteudo{
-  min-height: 87vh;
+.sidebar:hover {
+  background-color: rgba(0, 0, 0, 0.452);
+  color: white;
+  transition: 0.3s;
 }
 
-.principal{
+.profile {
+  display: flex;
+  align-items: center;
+  margin-top: 30px;
+}
+
+.profile-itens {
+  margin-left: 30px;
+  margin-bottom: 8px;
+}
+
+.imgprofile {
+  border-radius: 9999px;
+  width: 100px;
+}
+
+.principal {
   overflow: auto;
-  height: 87vh;
   position: relative;
-  max-width: 80%;
+  max-width: 84vw;
+  height: 86.5vh;
   margin-left: auto;
   scrollbar-width: thin;
-  scrollbar-color: orange orange;
+  scrollbar-color: gray gray;
+  font-weight: 300;
 }
 
 ::-webkit-scrollbar {
-  width: 8px;
+  width: 4px;
 }
 ::-webkit-scrollbar-track {
   background: #fafafa;
 }
 ::-webkit-scrollbar-thumb {
-  background-color: orange;
+  background-color: gray;
   border-radius: 20px;
-  border: 3px solid orange;
+  border: 3px solid gray;
 }
 
-.footer{
-  background-color: #eeeeee;
+.footer {
+  background-color: #e0dede;
   text-align: center;
   padding: 8px;
-  padding: 10px;
-  border-top: black;
-  border-width: 8px;
+}
+
+.colum3 {
+  -webkit-columns: 3 200px;
+  -moz-columns: 3 200px;
+  columns: 3 200px;
+  -webkit-column-gap: 1px;
+  -moz-column-gap: 1px;
+  column-gap: 1px;
+}
+
+.cardAluno {
+  display: inline-block;
+  border: 2px solid #7fbb63;
+  padding: 6px;
+  margin-top: 2px;
+  margin-bottom: 6px;
+  border-radius: 1rem;
+  width: 300px;
+  font-size: 14px;
+}
+
+.cardMensalidade {
+  display: inline-block;
+  border: 2px solid #7fbb63;
+  border-radius: 15px;
+  padding: 6px;
+  margin-top: 2px;
+  margin-bottom: 6px;
+  width: 300px;
+  font-size: 14px;
+}
+
+.table {
+  border-collapse: collapse;
+  border: 1px solid white;
+  border-radius: 6px;
+  color: gray;
+  font-weight: 300;
+  background-color: #e4eaff;
+  margin-top: 20px;
+}
+
+.table-center {
+  margin-left: 12%;
+}
+
+.table-head {
+  font-weight: 300;
+  font-weight: bold;
+  padding: 25px;
+  border-bottom: 1px solid white;
+}
+
+.table-row {
+  padding: 6px;
+  padding-left: 25px;
+  border-bottom: 1px solid white;
+}
+
+.table-hover:hover {
+  background-color: #cfd9fc;
 }

@@ -9,11 +9,10 @@ const MyApp = ({ Component, pageProps }) => {
     <div>
       <Header />
       <Sidebar />
-      <div className='principal'>
+      <div className="principal">
         <Component {...pageProps} />
       </div>
       <Footer />
-
     </div>
   )
 }
