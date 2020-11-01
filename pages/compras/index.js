@@ -2,7 +2,7 @@ import React from 'react'
 import auth0 from '../../lib/auth0'
 import Link from 'next/link'
 
-const Despesas = (props) => {
+const Compras = (props) => {
   let total = 0
   console.log(props.errors)
   console.log(props.user)
@@ -27,7 +27,7 @@ const Despesas = (props) => {
                 </tr>
               </thead>
               <tbody>
-                {props.data.findAllDespesas.map((despesa) => {
+                {props.data.findAllCompras.map((despesa) => {
                   total = total + despesa.price
                   return (
                     <tr key={despesa.id} className="table-hover">
@@ -64,7 +64,7 @@ const Despesas = (props) => {
   )
 }
 
-export default Despesas
+export default Compras
 
 export async function getServerSideProps({ req, res }) {
   const session = await auth0.getSession(req)
@@ -79,21 +79,17 @@ export async function getServerSideProps({ req, res }) {
       },
       body: JSON.stringify({
         query: `{
-            findAllDespesas(user:"${session.user.email}"){
+            findAllCompras(user:"${session.user.email}"){
               id
-              description
-              price
-              dueDate
-              referenceMonth
-              paymentDate
-              paid
+  description
+  price
+  date
             }
           }`,
       }),
     })
     const despesasDB = await data.json()
     const despesas = despesasDB.data
-    console.log(despesas)
     let errors = null
     if (despesasDB.errors) {
       errors = despesasDB.errors

@@ -3,6 +3,7 @@ import auth0 from "../lib/auth0";
 
 const Usuario = (props) => {
   const img = props.user.picture;
+  console.log(img)
   return (
     <div className="profile ">
       <img src={img} alt="imagem de perfil" className="imgprofile" />

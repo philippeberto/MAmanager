@@ -1,14 +1,15 @@
 import React from 'react'
+import auth0 from '../../lib/auth0'
 import { useFormik } from 'formik'
 import * as Yup from 'yup'
 
-const NovaVenda = () => {
+const NovaVenda = (props) => {
   const { handleSubmit, handleChange, values, touched, errors } = useFormik({
     initialValues: {
-      description: '',
       idAluno: '',
-      paymentDate: '',
-      monthPaid: '',
+      price: '',
+      date: '',
+      description: ''
     },
     validationSchema: Yup.object({
       idAluno: Yup.string()
@@ -16,13 +17,16 @@ const NovaVenda = () => {
         .max(20, 'O ID deve ter 20 caracteres')
         .required('Obrigatório'),
       price: Yup.number().required('Obrigatório'),
-      paymentDate: Yup.date(),
-      monthPaid: Yup.number(),
+      date: Yup.date(),
+      description: Yup.string()
+        .min(5, 'A descrição deve ter 20 caracteres')
+        .max(50, 'A descrição deve ter 20 caracteres')
+        .required('Obrigatório'),
     }),
     onSubmit: (values) => {
-      salvarMensalidade(values)
+      salvarVenda(values, props.user.email)
       alert(
-        `idAluno: ${values.idAluno},price: ${values.price},paymentDate: ${values.paymentDate},monthPaid: ${values.monthPaid}`,
+        `idAluno: ${values.idAluno},price: ${values.price},date: ${values.date},description: ${values.description}`,
       )
     },
   })
@@ -56,29 +60,29 @@ const NovaVenda = () => {
           {touched.price && errors.price ? <text>{errors.price}</text> : null}
         </div>
         <div>
-          <label htmlFor="paymentDate">Data do Pagamento: </label>
+          <label htmlFor="date">Data: </label>
           <input
-            value={values.paymentDate}
+            value={values.date}
             onChange={handleChange}
             type="date"
-            id="paymentDate"
-            name="paymentDate"
+            id="date"
+            name="date"
           />
-          {touched.paymentDate && errors.paymentDate ? (
-            <text>{errors.paymentDate}</text>
+          {touched.date && errors.date ? (
+            <text>{errors.date}</text>
           ) : null}
         </div>
         <div>
-          <label htmlFor="monthPaid">Mês Pago: </label>
+          <label htmlFor="description">Descrição: </label>
           <input
-            value={values.monthPaid}
+            value={values.description}
             onChange={handleChange}
             type="text"
-            id="monthPaid"
-            name="monthPaid"
+            id="description"
+            name="description"
           />
-          {touched.monthPaid && errors.monthPaid ? (
-            <text>{errors.monthPaid}</text>
+          {touched.description && errors.description ? (
+            <text>{errors.description}</text>
           ) : null}
         </div>
         <input type="submit" value="Cadastrar"></input>
@@ -89,7 +93,23 @@ const NovaVenda = () => {
 
 export default NovaVenda
 
-const salvarMensalidade = async (venda) => {
+export async function getServerSideProps({ req, res }) {
+  const session = await auth0.getSession(req)
+  if (session) {
+    return {
+      props: {
+        user: session.user
+      }
+    }
+  }
+  return {
+    props: {
+      user: "O usuário não está logado."
+    }
+  }
+}
+
+const salvarVenda = async (venda, user) => {
   const data = await fetch('http://localhost:3001/graphql', {
     method: 'POST',
     headers: {
@@ -100,14 +120,17 @@ const salvarMensalidade = async (venda) => {
     },
     body: JSON.stringify({
       query: `mutation{
-        createMensalidade(input: {
+        createVenda(user:"${user}", input: {
           idAluno: "${venda.idAluno}",
           price: ${venda.price},
-          paymentDate: "${venda.paymentDate}",
-          monthPaid: "${venda.monthPaid}"
-        })
+          date: "${venda.date}",
+          description: "${venda.description}",
+        }){
+          id
+          description
+        }
       }`,
     }),
   })
-  console.log(data)
+  console.log(data.json())
 }

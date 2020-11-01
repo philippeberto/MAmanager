@@ -7,7 +7,7 @@ const Mensalidades = (props) => {
       return (
         <div>
           <h2>Mensalidades</h2>
-          <a href="/mensalidades/novaMensalidade">Nova Mensalidade</a>
+          <a href="/mensalidades/addMensalidade">Nova Mensalidade</a>
           <input type="text"></input>
           <button type="submit">ok</button>
           <div className="colum3">
@@ -32,14 +32,14 @@ const Mensalidades = (props) => {
     }
     return (
       <div>
-        <h3>{props.user}</h3>
-        <h3>{props.data}</h3>
+        <p>{props.user}</p>
+        <p>{props.data}</p>
       </div>
     )
   }
   return (
     <div>
-      <h3>{JSON.stringify(props.errors[0].message, null, 2)}</h3>
+      <p>{JSON.stringify(props.errors[0].message, null, 2)}</p>
     </div>
   )
 }
@@ -59,7 +59,7 @@ export async function getServerSideProps({ req, res }) {
       },
       body: JSON.stringify({
         query: `{
-          findAllMensalidades{
+          findAllMensalidades(user:"${session.user.email}"){
             id
             idAluno
             monthPaid

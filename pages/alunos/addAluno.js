@@ -1,63 +1,53 @@
-import React from "react";
-import { useFormik } from "formik";
-import * as Yup from "yup";
+import React from 'react'
+import auth0 from '../../lib/auth0'
+import { useFormik } from 'formik'
+import * as Yup from 'yup'
 
-const CriarAluno = () => {
+const CriarAluno = (props) => {
   const { handleSubmit, handleChange, values, touched, errors } = useFormik({
     initialValues: {
-      nome: "",
-      telemovel: "",
-      ndata: "",
-      endereco: "",
-      localidade: "",
-      vdata: "",
-      sexo: "",
-      responsavel: "",
-      tresponsavel: "",
+      nome: '',
+      telemovel: '',
+      ndata: '',
+      endereco: '',
+      localidade: '',
+      vdata: '',
+      sexo: '',
+      responsavel: '',
+      tresponsavel: '',
     },
     validationSchema: Yup.object({
       nome: Yup.string()
-        .max(50, "O nome deve ter no máximo 50 caracteres")
-        .required("Obrigatório"),
+        .max(50, 'O nome deve ter no máximo 50 caracteres')
+        .required('Obrigatório'),
       telemovel: Yup.string()
-        .max(13, "O telemóvel deve ter no máximo 13 caracteres")
-        .required("Obrigatório"),
-      ndata: Yup.date().required("Obrigatório"),
+        .max(13, 'O telemóvel deve ter no máximo 13 caracteres')
+        .required('Obrigatório'),
+      ndata: Yup.date().required('Obrigatório'),
       endereco: Yup.string().max(
         100,
-        "Endereço deve ter no máximo 100 caracteres"
+        'Endereço deve ter no máximo 100 caracteres',
       ),
       localidade: Yup.string()
-        .max(30, "Localidade deve ter no máximo 30 caracteres")
-        .required("Obrigatório"),
+        .max(30, 'Localidade deve ter no máximo 30 caracteres')
+        .required('Obrigatório'),
       vdata: Yup.number()
-        .max(31, "Insira um valor entre 01 e 31")
-        .required("Obrigatório"),
-      sexo: Yup.string().required("Obrigatório"),
+        .max(31, 'Insira um valor entre 01 e 31')
+        .required('Obrigatório'),
+      sexo: Yup.string().required('Obrigatório'),
       responsavel: Yup.string().max(
         50,
-        "O nome deve ter no máximo 50 caracteres"
+        'O nome deve ter no máximo 50 caracteres',
       ),
-      tresponsavel: Yup.string().max(13, "O telemóvel deve ter no máximo"),
+      tresponsavel: Yup.string().max(13, 'O telemóvel deve ter no máximo'),
     }),
     onSubmit: (values) => {
-      const novoAluno = [
-        { nome: `${values.nome}` },
-        { telemovel: `${values.telemovel}` },
-        { ndata: `${values.ndata}` },
-        { endereco: `${values.endereco}` },
-        { localidade: `${values.localidade}` },
-        { vdata: `${values.vdata}` },
-        { sexo: `${values.sexo}` },
-        { responsavel: `${values.responsavel}` },
-        { tresponsavel: `${values.tresponsavel}` },
-      ];
-      salvarAluno(values);
+      salvarAluno(values, props.user.email)
       alert(
-        `nome: ${values.nome},telemovel: ${values.telemovel},ndata: ${values.ndata},endereco: ${values.endereco},localidade: ${values.localidade},vdata: ${values.vdata},sexo: ${values.sexo},responsavel: ${values.responsavel},tresponsavel: ${values.tresponsavel},`
-      );
+        `nome: ${values.nome},telemovel: ${values.telemovel},ndata: ${values.ndata},endereco: ${values.endereco},localidade: ${values.localidade},vdata: ${values.vdata},sexo: ${values.sexo},responsavel: ${values.responsavel},tresponsavel: ${values.tresponsavel},`,
+      )
     },
-  });
+  })
 
   return (
     <div className="conteudo">
@@ -165,7 +155,7 @@ const CriarAluno = () => {
           <label htmlFor="tresponsavel">
             Telemóvel do
             <br />
-            Responsável:{" "}
+            Responsável:{' '}
           </label>
           <input
             value={values.tresponsavel}
@@ -179,29 +169,40 @@ const CriarAluno = () => {
         <input type="submit" value="Cadastrar"></input>
       </form>
     </div>
-  );
-};
+  )
+}
 
-CriarAluno.getInitialProps = async (ctx) => {
-  return;
-};
+export default CriarAluno
 
-export default CriarAluno;
+export async function getServerSideProps({ req, res }) {
+  const session = await auth0.getSession(req)
+  if (session) {
+    return {
+      props: {
+        user: session.user,
+      },
+    }
+  }
+  return {
+    props: {
+      user: 'Usuário não logado',
+      data: 'Dados inacessíveis',
+    },
+  }
+}
 
-const salvarAluno = async (aluno) => {
-  console.log(aluno.nome);
-
-  const data = await fetch("http://localhost:3001/graphql", {
-    method: "POST",
+const salvarAluno = async (aluno, user) => {
+  const data = await fetch('http://localhost:3001/graphql', {
+    method: 'POST',
     headers: {
-      "Content-Type": "application/json",
-      Accept: "application/json",
+      'Content-Type': 'application/json',
+      Accept: 'application/json',
       Authorization:
-        "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjbGllbnQiOiJmcm9udC1lbmQtS2U0Z3JnNzRocjRkY2I2IiwiaWF0IjoxNTk3ODU3NTg2fQ.MVQIQxXkVgbhCFzYRwIiAtJZHbYN0UqiJGBndMLKAGY",
+        'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjbGllbnQiOiJmcm9udC1lbmQtS2U0Z3JnNzRocjRkY2I2IiwiaWF0IjoxNTk3ODU3NTg2fQ.MVQIQxXkVgbhCFzYRwIiAtJZHbYN0UqiJGBndMLKAGY',
     },
     body: JSON.stringify({
       query: `mutation{
-        createAluno(input: {
+        createAluno(user:"${user}", input: {
           aluno: "${aluno.nome}"
           phone: "${aluno.telemovel}", 
           birthDate: "${aluno.ndata}", 
@@ -217,6 +218,8 @@ const salvarAluno = async (aluno) => {
         }
       }`,
     }),
-  });
-  console.log(data);
-};
+  })
+  const alunoDB = await data.json()
+  const novoAluno = alunoDB.data
+  console.log(novoAluno)
+}

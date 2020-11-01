@@ -1,8 +1,9 @@
 import React from 'react'
+import auth0 from '../../lib/auth0'
 import { useFormik } from 'formik'
 import * as Yup from 'yup'
 
-const CriarMensalidade = () => {
+const CriarMensalidade = (props) => {
   const { handleSubmit, handleChange, values, touched, errors } = useFormik({
     initialValues: {
       idAluno: '',
@@ -20,7 +21,7 @@ const CriarMensalidade = () => {
       monthPaid: Yup.number(),
     }),
     onSubmit: (values) => {
-      salvarMensalidade(values)
+      salvarMensalidade(values, props.user.email)
       alert(
         `idAluno: ${values.idAluno},price: ${values.price},paymentDate: ${values.paymentDate},monthPaid: ${values.monthPaid}`,
       )
@@ -89,7 +90,24 @@ const CriarMensalidade = () => {
 
 export default CriarMensalidade
 
-const salvarMensalidade = async (mensalidade) => {
+export async function getServerSideProps({ req, res }) {
+  const session = await auth0.getSession(req)
+  if (session) {
+    return {
+      props: {
+        user: session.user,
+      },
+    }
+  }
+  return {
+    props: {
+      user: 'Usuário não logado',
+      data: 'Dados inacessíveis',
+    },
+  }
+}
+
+const salvarMensalidade = async (mensalidade, user) => {
   const data = await fetch('http://localhost:3001/graphql', {
     method: 'POST',
     headers: {
@@ -100,7 +118,7 @@ const salvarMensalidade = async (mensalidade) => {
     },
     body: JSON.stringify({
       query: `mutation{
-        createMensalidade(input: {
+        createMensalidade(user:"${user}", input: {
           idAluno: "${mensalidade.idAluno}",
           price: ${mensalidade.price},
           paymentDate: "${mensalidade.paymentDate}",

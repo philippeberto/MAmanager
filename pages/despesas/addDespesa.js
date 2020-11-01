@@ -1,8 +1,9 @@
 import React from 'react'
+import auth0 from '../../lib/auth0'
 import { useFormik } from 'formik'
 import * as Yup from 'yup'
 
-const CriarDespesa = () => {
+const CriarDespesa = (props) => {
   const { handleSubmit, handleChange, values, touched, errors } = useFormik({
     initialValues: {
       description: '',
@@ -26,7 +27,7 @@ const CriarDespesa = () => {
       paid: Yup.boolean(),
     }),
     onSubmit: (values) => {
-      salvarDespesa(values)
+      salvarDespesa(values, props.user.email)
       alert(`Despesa ${values.description} salva com sucesso!`)
     },
   })
@@ -104,8 +105,24 @@ const CriarDespesa = () => {
 
 export default CriarDespesa
 
-const salvarDespesa = async (despesa) => {
-  console.log(despesa)
+export async function getServerSideProps({ req, res }) {
+  const session = await auth0.getSession(req)
+  if (session) {
+    return {
+      props: {
+        user: session.user,
+      },
+    }
+  }
+  return {
+    props: {
+      user: 'Usuário não logado',
+      data: 'Dados inacessíveis',
+    },
+  }
+}
+
+const salvarDespesa = async (despesa, email) => {
   const data = await fetch('http://localhost:3001/graphql', {
     method: 'POST',
     headers: {
@@ -116,7 +133,7 @@ const salvarDespesa = async (despesa) => {
     },
     body: JSON.stringify({
       query: `mutation{
-        createDespesa(input: {
+        createDespesa(user:"${email}", input: {
           description: "${despesa.description}"
           price: ${despesa.price}, 
           dueDate: "${despesa.dueDate}", 

@@ -8,7 +8,7 @@ const Alunos = (props) => {
       return (
         <div>
           <h2>Alunos Matriculados</h2>
-          <a href="/alunos/criarAluno">Novo Aluno</a>
+          <a href="/alunos/addAluno">Novo Aluno</a>
           <input type="text"></input>
           <button type="submit">ok</button>
           <div className="colum3">
@@ -17,7 +17,7 @@ const Alunos = (props) => {
                 <div key={aluno.id}>
                   <div className="cardAluno">
                     <h3>{aluno.aluno}</h3>
-                    <Link href="/alunos/criarAluno">
+                    <Link href={`/alunos/${aluno.id}/updateAluno`}>
                       <a>
                         <img
                           src="C:\Users\phili\Projetos\MAmanager\public\img\icon-edit.png"
@@ -45,14 +45,14 @@ const Alunos = (props) => {
     }
     return (
       <div>
-        <h3>{props.user}</h3>
-        <h3>{props.data}</h3>
+        <p>{props.user}</p>
+        <p>{props.data}</p>
       </div>
     )
   }
   return (
     <div>
-      <h3>{JSON.stringify(props.errors[0], null, 2)}</h3>
+      <p>{JSON.stringify(props.errors[0], null, 2)}</p>
     </div>
   )
 }
@@ -72,7 +72,7 @@ export async function getServerSideProps({ req, res }) {
       },
       body: JSON.stringify({
         query: `{ 
-          findAllAlunos {
+          findAllAlunos(user: "${session.user.email}") {
             id
             aluno
             birthDate
@@ -100,7 +100,7 @@ export async function getServerSideProps({ req, res }) {
   return {
     props: {
       user: 'Usuário não logado',
-      data: 'Dados inacessíveis',
-    },
+      data: 'Dados inacessíveis'
+    }
   }
 }
