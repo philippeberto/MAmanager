@@ -24,15 +24,15 @@
       "static/chunks/webpack.js",
       "static/chunks/pages/_error.js"
     ],
-    "/alunos": [
+    "/compras/addCompra": [
       "static/chunks/main.js",
       "static/chunks/webpack.js",
-      "static/chunks/pages/alunos.js"
+      "static/chunks/pages/compras/addCompra.js"
     ],
-    "/compras": [
+    "/seguros": [
       "static/chunks/main.js",
       "static/chunks/webpack.js",
-      "static/chunks/pages/compras.js"
+      "static/chunks/pages/seguros.js"
     ]
   },
   "ampFirstPages": []

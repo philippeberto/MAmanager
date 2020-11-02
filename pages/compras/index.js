@@ -4,15 +4,12 @@ import Link from 'next/link'
 
 const Compras = (props) => {
   let total = 0
-  console.log(props.errors)
-  console.log(props.user)
-  console.log(props.data)
   if (!props.errors) {
     if (props.user && props.user !== 'Usuário não logado') {
       return (
         <div className="table-center">
           <h2>Despesas</h2>
-          <Link href="/despesas/addDespesa">
+          <Link href="/compras/addCompra">
             <a>Registar Despesa</a>
           </Link>
           <div>
@@ -20,10 +17,8 @@ const Compras = (props) => {
               <thead>
                 <tr>
                   <td className="table-head">Descrição</td>
-                  <td className="table-head">Data de Vencimento</td>
-                  <td className="table-head">Data do pagamento</td>
+                  <td className="table-head">Data</td>
                   <td className="table-head">Valor</td>
-                  <td className="table-head">Status</td>
                 </tr>
               </thead>
               <tbody>
@@ -32,8 +27,7 @@ const Compras = (props) => {
                   return (
                     <tr key={despesa.id} className="table-hover">
                       <td className="table-row">{despesa.description}</td>
-                      <td className="table-row">{despesa.dueDate}</td>
-                      <td className="table-row">{despesa.paymentDate}</td>
+                      <td className="table-row">{despesa.date}</td>
                       <td className="table-row">{despesa.price} €</td>
                       <td className="table-row">
                         {despesa.paid === false && <span>A Pagar</span>}
@@ -43,7 +37,6 @@ const Compras = (props) => {
                   )
                 })}
                 <tr className="table-head ">
-                  <td className="table-row"></td>
                   <td className="table-row"></td>
                   <td className="table-row">Total</td>
                   <td className="table-row">{total} €</td>
