@@ -3,6 +3,7 @@ import auth0 from '../../lib/auth0'
 import Link from 'next/link'
 
 const Seguros = (props) => {
+  console.log(props.data.findAllSeguros)
   if (!props.errors) {
     if (props.user && props.user !== 'Usuário não logado') {
       return (
@@ -26,14 +27,16 @@ const Seguros = (props) => {
                     <tr key={seguro.id} className="table-hover">
                       <td className="table-row">{seguro.idAluno}</td>
                       <td className="table-row">{seguro.fdate}</td>
-                      <td className="table-row">{seguro.status}</td>
+                      <td className="table-row">{JSON.stringify(seguro.status)}</td>
                     </tr>
                   )
                 })}
               </tbody>
             </table>
           </div>
+          <pre>{props.data.findAllSeguros.status}</pre>
         </div>
+
       )
     }
   }

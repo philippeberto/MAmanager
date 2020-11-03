@@ -11,7 +11,7 @@ const Sidebar = (props) => {
         </a>
       </Link>
 
-      <Link href="/app">
+      <Link href="/">
         <a>
           <div className="sidebar">Dashboard</div>
         </a>
