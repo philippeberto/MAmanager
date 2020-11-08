@@ -13,12 +13,13 @@
   "license": "ISC",
   "dependencies": {
     "@auth0/nextjs-auth0": "^0.15.0",
+    "dayjs": "^1.9.5",
     "dotenv": "^8.2.0",
+    "firebase-admin": "^9.3.0",
     "formik": "^2.1.5",
-    "next": "^9.5.1",
-    "next-images": "^1.4.1",
-    "react": "^16.13.1",
-    "react-dom": "^16.13.1",
+    "next": "^10.0.1",
+    "react": "^17.0.1",
+    "react-dom": "^17.0.1",
     "yup": "^0.29.3"
   }
 }

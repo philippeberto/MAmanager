@@ -1,5 +1,6 @@
 import React from 'react'
 import auth0 from '../../lib/auth0'
+import dayjs from 'dayjs'
 import { useFormik } from 'formik'
 import * as Yup from 'yup'
 
@@ -34,7 +35,7 @@ const CriarDespesa = (props) => {
 
   return (
     <div className="conteudo">
-      <h2>Novo Aluno</h2>
+      <h2>Nova Despesa</h2>
       <form onSubmit={handleSubmit}>
         <div>
           <label htmlFor="description">Descrição: </label>
@@ -87,7 +88,7 @@ const CriarDespesa = (props) => {
             <input
               value={values.paymentDate}
               onChange={handleChange}
-              type="text"
+              type="date"
               id="paymentDate"
               name="paymentDate"
             />
@@ -137,9 +138,9 @@ const salvarDespesa = async (despesa, email) => {
           description: "${despesa.description}"
           price: ${despesa.price}, 
           dueDate: "${despesa.dueDate}", 
-          referenceMonth: "${despesa.referenceMonth}", 
-          paymentDate: "${despesa.paymentDate}", 
-          paid: ${false}, 
+          referenceMonth: ${parseInt(despesa.referenceMonth)}, 
+          paymentDate: "${despesa.paymentDate}",
+          createdAt: "${dayjs().format('YYYY-MM-DD')}"
         }){
           id
           description
@@ -147,5 +148,4 @@ const salvarDespesa = async (despesa, email) => {
       }`,
     }),
   })
-  console.log(data)
 }

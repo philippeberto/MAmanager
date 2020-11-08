@@ -1,5 +1,6 @@
 import React from 'react'
 import auth0 from '../../lib/auth0'
+import dayjs from 'dayjs'
 
 const Mensalidades = (props) => {
   if (!props.errors) {
@@ -18,7 +19,7 @@ const Mensalidades = (props) => {
                     <h3>{mensalidade.idAluno}</h3>
                     Mês pago: {mensalidade.monthPaid}
                     <br />
-                    Data do Pagamento: {mensalidade.paymentDate}
+                    Data do Pagamento: {dayjs(mensalidade.paymentDate).format('DD/MM/YYYY')}
                     <br />
                     Valor: {mensalidade.price}
                     <br />
@@ -39,7 +40,10 @@ const Mensalidades = (props) => {
   }
   return (
     <div>
-      <p>{JSON.stringify(props.errors[0].message, null, 2)}</p>
+      {props.errors.map(erro => {
+        return <p>{JSON.stringify(erro.message, null, 2)}</p>
+      })}
+    )
     </div>
   )
 }

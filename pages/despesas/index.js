@@ -1,14 +1,14 @@
 import React from 'react'
 import auth0 from '../../lib/auth0'
 import Link from 'next/link'
+import dayjs from 'dayjs'
 
 const Despesas = (props) => {
   let total = 0
-  console.log(props.errors)
-  console.log(props.user)
-  console.log(props.data)
   if (!props.errors) {
     if (props.user && props.user !== 'Usuário não logado') {
+      const despesas = props.data.findAllDespesas
+      console.log(despesas)
       return (
         <div className="table-center">
           <h2>Despesas</h2>
@@ -32,8 +32,8 @@ const Despesas = (props) => {
                   return (
                     <tr key={despesa.id} className="table-hover">
                       <td className="table-row">{despesa.description}</td>
-                      <td className="table-row">{despesa.dueDate}</td>
-                      <td className="table-row">{despesa.paymentDate}</td>
+                      <td className="table-row">{dayjs(despesa.dueDate).format('DD/MM/YYYY')}</td>
+                      <td className="table-row">{dayjs(despesa.paymentDate).format('DD/MM/YYYY')}</td>
                       <td className="table-row">{despesa.price} €</td>
                       <td className="table-row">
                         {despesa.paid === false && <span>A Pagar</span>}
@@ -55,11 +55,19 @@ const Despesas = (props) => {
         </div>
       )
     }
+    return (
+      <div>
+        <p>{props.user}</p>
+        <p>{props.data}</p>
+      </div>
+    )
   }
   return (
     <div>
-      <p>{props.user}</p>
-      <p>{props.data}</p>
+      {props.errors.map(erro => {
+        return <p>{JSON.stringify(erro.message, null, 2)}</p>
+      })}
+    )
     </div>
   )
 }
@@ -93,7 +101,6 @@ export async function getServerSideProps({ req, res }) {
     })
     const despesasDB = await data.json()
     const despesas = despesasDB.data
-    console.log(despesas)
     let errors = null
     if (despesasDB.errors) {
       errors = despesasDB.errors

@@ -122,7 +122,7 @@ const salvarMensalidade = async (mensalidade, user) => {
           idAluno: "${mensalidade.idAluno}",
           price: ${mensalidade.price},
           paymentDate: "${mensalidade.paymentDate}",
-          monthPaid: "${mensalidade.monthPaid}"
+          monthPaid: ${mensalidade.monthPaid}
         })
       }`,
     }),

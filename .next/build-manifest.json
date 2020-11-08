@@ -29,10 +29,10 @@
       "static/chunks/webpack.js",
       "static/chunks/pages/_error.js"
     ],
-    "/compras/addCompra": [
+    "/despesas": [
       "static/chunks/main.js",
       "static/chunks/webpack.js",
-      "static/chunks/pages/compras/addCompra.js"
+      "static/chunks/pages/despesas.js"
     ]
   },
   "ampFirstPages": []

@@ -2,7 +2,7 @@ import React from 'react'
 import Link from 'next/link'
 import { useState } from 'react'
 import auth0 from '../../lib/auth0'
-import img from '../../public/img/GBlogo.png'
+import Image from 'next/image'
 
 const Header = (props) => {
   // console.log(props.logged)
@@ -14,7 +14,7 @@ const Header = (props) => {
     <div className="header">
       <Link href="app">
         <a>
-          <img src={img} className="logo" />
+          <Image src='/img/GBlogo.png' width='210' height='45' className="logo" />
         </a>
       </Link>
       <Link href="api/login">

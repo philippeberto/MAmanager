@@ -1,9 +1,9 @@
 import React from 'react'
 import auth0 from '../../lib/auth0'
+import dayjs from 'dayjs'
 import Link from 'next/link'
 
 const Seguros = (props) => {
-  console.log(props.data.findAllSeguros)
   if (!props.errors) {
     if (props.user && props.user !== 'Usuário não logado') {
       return (
@@ -26,8 +26,8 @@ const Seguros = (props) => {
                   return (
                     <tr key={seguro.id} className="table-hover">
                       <td className="table-row">{seguro.idAluno}</td>
-                      <td className="table-row">{seguro.fdate}</td>
-                      <td className="table-row">{JSON.stringify(seguro.status)}</td>
+                      <td className="table-row">{dayjs(seguro.fdate).format('DD/MM/YYYY')}</td>
+                      <td className="table-row">{dayjs().isBefore(dayjs(seguro.fdate)) ? <pre>Válido</pre> : <pre>Vencido</pre>}</td>
                     </tr>
                   )
                 })}
@@ -39,11 +39,19 @@ const Seguros = (props) => {
 
       )
     }
+    return (
+      <div>
+        <p>{props.user}</p>
+        <p>{props.data}</p>
+      </div>
+    )
   }
   return (
     <div>
-      <p>{props.user}</p>
-      <p>{props.data}</p>
+      {props.errors.map(erro => {
+        return <p>{JSON.stringify(erro.message, null, 2)}</p>
+      })}
+    )
     </div>
   )
 }
@@ -75,7 +83,6 @@ export async function getServerSideProps({ req, res }) {
     })
     const segurosDB = await data.json()
     const seguros = segurosDB.data
-    console.log(seguros)
     let errors = null
     if (segurosDB.errors) {
       errors = segurosDB.errors

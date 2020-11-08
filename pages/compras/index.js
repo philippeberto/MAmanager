@@ -1,5 +1,6 @@
 import React from 'react'
 import auth0 from '../../lib/auth0'
+import dayjs from 'dayjs'
 import Link from 'next/link'
 
 const Compras = (props) => {
@@ -8,9 +9,9 @@ const Compras = (props) => {
     if (props.user && props.user !== 'Usuário não logado') {
       return (
         <div className="table-center">
-          <h2>Despesas</h2>
+          <h2>Compras</h2>
           <Link href="/compras/addCompra">
-            <a>Registar Despesa</a>
+            <a>Registar Compra</a>
           </Link>
           <div>
             <table className="table">
@@ -27,7 +28,7 @@ const Compras = (props) => {
                   return (
                     <tr key={despesa.id} className="table-hover">
                       <td className="table-row">{despesa.description}</td>
-                      <td className="table-row">{despesa.date}</td>
+                      <td className="table-row">{dayjs(despesa.date).format('DD/MM/YYYY')}</td>
                       <td className="table-row">{despesa.price} €</td>
                       <td className="table-row">
                         {despesa.paid === false && <span>A Pagar</span>}
@@ -48,11 +49,19 @@ const Compras = (props) => {
         </div>
       )
     }
+    return (
+      <div>
+        <p>{props.user}</p>
+        <p>{props.data}</p>
+      </div>
+    )
   }
   return (
     <div>
-      <p>{props.user}</p>
-      <p>{props.data}</p>
+      {props.errors.map(erro => {
+        return <p>{JSON.stringify(erro.message, null, 2)}</p>
+      })}
+    )
     </div>
   )
 }

@@ -1,6 +1,8 @@
 import React from 'react'
 import auth0 from '../../lib/auth0'
+import dayjs from 'dayjs'
 import Link from 'next/link'
+import Image from 'next/image'
 
 const Alunos = (props) => {
   if (!props.errors) {
@@ -19,15 +21,17 @@ const Alunos = (props) => {
                     <h3>{aluno.aluno}</h3>
                     <Link href={`/alunos/${aluno.id}/updateAluno`}>
                       <a>
-                        <img
-                          src="C:\Users\phili\Projetos\MAmanager\public\img\icon-edit.png"
+                        <Image
+                          src="/img/icon-edit.png"
+                          width='20'
+                          height='20'
                           alt="edit icon"
                         />
                       </a>
                     </Link>
                     ID: {aluno.id}
                     <br />
-                    Nasc.: {aluno.birthDate}
+                    Nasc.: {dayjs(aluno.birthDate).format('DD/MM/YYYY')}
                     <br />
                     Localização: {aluno.location}
                     <br />
@@ -52,7 +56,10 @@ const Alunos = (props) => {
   }
   return (
     <div>
-      <p>{JSON.stringify(props.errors[0], null, 2)}</p>
+      {props.errors.map(erro => {
+        return <p>{JSON.stringify(erro.message, null, 2)}</p>
+      })}
+    )
     </div>
   )
 }

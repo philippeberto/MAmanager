@@ -1,15 +1,15 @@
 import React from "react";
-import { useRouter } from 'next/router'
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import auth0 from "../../../lib/auth0";
+import dayjs from "dayjs";
 
 const EditarAluno = (props) => {
   const { handleSubmit, handleChange, values, touched, errors } = useFormik({
     initialValues: {
       nome: props.data.findAluno.aluno,
       telemovel: props.data.findAluno.phone,
-      ndata: props.data.findAluno.birthDate,
+      ndata: dayjs(props.data.findAluno.birthDate).format('YYYY-MM-DD'),
       responsavel: props.data.findAluno.parent,
       tresponsavel: props.data.findAluno.parentPhone,
       endereco: props.data.findAluno.address,
@@ -199,7 +199,7 @@ export async function getServerSideProps({ req, res }) {
       },
       body: JSON.stringify({
         query: `{ 
-          findAluno (id:"${req.url.split('/')[2]}") {
+          findAluno (user: "${session.user.email}", id:"${req.url.split('/')[2]}") {
             id
             aluno
             phone

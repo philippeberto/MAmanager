@@ -1,5 +1,6 @@
 import React from 'react'
 import auth0 from '../../lib/auth0'
+import dayjs from 'dayjs'
 import Link from 'next/link'
 
 const Vendas = (props) => {
@@ -27,10 +28,10 @@ const Vendas = (props) => {
                   total = total + venda.price
                   return (
                     <tr key={venda.id} className="table-hover">
+                      <td className="table-row">{venda.idAluno}</td>
                       <td className="table-row">{venda.description}</td>
-                      <td className="table-row">{venda.date}</td>
                       <td className="table-row">{venda.price} €</td>
-                      <td className="table-row">{venda.date}</td>
+                      <td className="table-row">{dayjs(venda.date).format('DD/MM/YYYY')}</td>
                     </tr>
                   )
                 })}
@@ -43,11 +44,19 @@ const Vendas = (props) => {
         </div>
       )
     }
+    return (
+      <div>
+        <p>{props.user}</p>
+        <p>{props.data}</p>
+      </div>
+    )
   }
   return (
     <div>
-      <p>{props.user}</p>
-      <p>{props.data}</p>
+      {props.errors.map(erro => {
+        return <p>{JSON.stringify(erro.message, null, 2)}</p>
+      })}
+    )
     </div>
   )
 }
@@ -79,7 +88,6 @@ export async function getServerSideProps({ req, res }) {
     })
     const vendasDB = await data.json()
     const vendas = vendasDB.data
-    console.log(vendas)
     let errors = null
     if (vendasDB.errors) {
       errors = vendasDB.errors

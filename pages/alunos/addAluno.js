@@ -210,7 +210,7 @@ const salvarAluno = async (aluno, user) => {
           parentPhone: "${aluno.tresponsavel}", 
           address: "${aluno.endereco}", 
           location: "${aluno.localidade}", 
-          dueDate: "${aluno.vdata}", 
+          dueDate: ${parseInt(aluno.vdata)}, 
           gender: "${aluno.sexo}"
         }){
           id

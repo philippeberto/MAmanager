@@ -30,7 +30,7 @@ const NovaVenda = (props) => {
 
   return (
     <div className="conteudo">
-      <h2>Nova Mensalidade</h2>
+      <h2>Novo Seguro</h2>
       <form onSubmit={handleSubmit}>
         <div>
           <label htmlFor="idAluno">ID do Aluno: </label>
@@ -46,9 +46,9 @@ const NovaVenda = (props) => {
           ) : null}
         </div>
         <div>
-          <label htmlFor="idate">Data: </label>
+          <label htmlFor="idate">Data Inicial: </label>
           <input
-            value={values.date}
+            value={values.idate}
             onChange={handleChange}
             type="date"
             id="idate"
@@ -59,9 +59,9 @@ const NovaVenda = (props) => {
           ) : null}
         </div>
         <div>
-          <label htmlFor="fdate">Data: </label>
+          <label htmlFor="fdate">Data Final: </label>
           <input
-            value={values.date}
+            value={values.fdate}
             onChange={handleChange}
             type="date"
             id="fdate"
@@ -72,7 +72,7 @@ const NovaVenda = (props) => {
           ) : null}
         </div>
         <div>
-          <label htmlFor="price">Preço: </label>
+          <label htmlFor="price">Valor: </label>
           <input
             value={values.price}
             onChange={handleChange}
@@ -122,10 +122,8 @@ const salvarSeguro = async (seguro, email) => {
           idate: "${seguro.idate}",
           fdate: "${seguro.fdate}",
           price: ${seguro.price},
-          status: ${true},
         }){
           idAluno
-          status
         }
       }`,
     }),
