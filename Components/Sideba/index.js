@@ -13,7 +13,7 @@ const Sidebar = (props) => {
 
       <Link href="/">
         <a>
-          <div className="sidebar">Dashboard</div>
+          <div className="sidebar">Inicio</div>
         </a>
       </Link>
 
