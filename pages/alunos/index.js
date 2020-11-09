@@ -6,51 +6,43 @@ import Image from 'next/image'
 
 const Alunos = (props) => {
   if (!props.errors) {
-    if (props.user && props.user !== 'Usuário não logado') {
-      return (
-        <div>
-          <h2>Alunos Matriculados</h2>
-          <a href="/alunos/addAluno">Novo Aluno</a>
-          <input type="text"></input>
-          <button type="submit">ok</button>
-          <div className="colum3">
-            {props.data.findAllAlunos.map((aluno) => {
-              return (
-                <div key={aluno.id}>
-                  <div className="cardAluno">
-                    <h3>{aluno.aluno}</h3>
-                    <Link href={`/alunos/${aluno.id}/updateAluno`}>
-                      <a>
-                        <Image
-                          src="/img/icon-edit.png"
-                          width='20'
-                          height='20'
-                          alt="edit icon"
-                        />
-                      </a>
-                    </Link>
-                    ID: {aluno.id}
-                    <br />
-                    Nasc.: {dayjs(aluno.birthDate).format('DD/MM/YYYY')}
-                    <br />
-                    Localização: {aluno.location}
-                    <br />
-                    Vencimento: {aluno.dueDate}
-                    <br />
-                    Sexo: {aluno.gender}
-                    <br />
-                  </div>
-                </div>
-              )
-            })}
-          </div>
-        </div>
-      )
-    }
     return (
       <div>
-        <p>{props.user}</p>
-        <p>{props.data}</p>
+        <h2>Alunos Matriculados</h2>
+        <a href="/alunos/addAluno">Novo Aluno</a>
+        <input type="text"></input>
+        <button type="submit">ok</button>
+        <div className="colum3">
+          {props.data.findAllAlunos.map((aluno) => {
+            return (
+              <div key={aluno.id}>
+                <div className="cardAluno">
+                  <h3>{aluno.aluno}</h3>
+                  <Link href={`/alunos/${aluno.id}/updateAluno`}>
+                    <a>
+                      <Image
+                        src="/img/icon-edit.png"
+                        width='20'
+                        height='20'
+                        alt="edit icon"
+                      />
+                    </a>
+                  </Link>
+                    ID: {aluno.id}
+                  <br />
+                    Nasc.: {dayjs(aluno.birthDate).format('DD/MM/YYYY')}
+                  <br />
+                    Localização: {aluno.location}
+                  <br />
+                    Vencimento: {aluno.dueDate}
+                  <br />
+                    Sexo: {aluno.gender}
+                  <br />
+                </div>
+              </div>
+            )
+          })}
+        </div>
       </div>
     )
   }

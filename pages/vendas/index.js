@@ -6,48 +6,40 @@ import Link from 'next/link'
 const Vendas = (props) => {
   let total = 0
   if (!props.errors) {
-    if (props.user && props.user !== 'Usuário não logado') {
-      return (
-        <div className="table-center">
-          <h2>Vendas</h2>
-          <Link href="/vendas/addVenda">
-            <a>Registar Venda</a>
-          </Link>
-          <div>
-            <table className="table">
-              <thead>
-                <tr>
-                  <td className="table-head">ID Aluno</td>
-                  <td className="table-head">Descrição</td>
-                  <td className="table-head">Valor</td>
-                  <td className="table-head">Data</td>
-                </tr>
-              </thead>
-              <tbody>
-                {props.data.findAllVendas.map((venda) => {
-                  total = total + venda.price
-                  return (
-                    <tr key={venda.id} className="table-hover">
-                      <td className="table-row">{venda.idAluno}</td>
-                      <td className="table-row">{venda.description}</td>
-                      <td className="table-row">{venda.price} €</td>
-                      <td className="table-row">{dayjs(venda.date).format('DD/MM/YYYY')}</td>
-                    </tr>
-                  )
-                })}
-                <td className="table-row"></td>
-                <td className="table-row">Total</td>
-                <td className="table-row">{total} €</td>
-              </tbody>
-            </table>
-          </div>
-        </div>
-      )
-    }
     return (
-      <div>
-        <p>{props.user}</p>
-        <p>{props.data}</p>
+      <div className="table-center">
+        <h2>Vendas</h2>
+        <Link href="/vendas/addVenda">
+          <a>Registar Venda</a>
+        </Link>
+        <div>
+          <table className="table">
+            <thead>
+              <tr>
+                <td className="table-head">ID Aluno</td>
+                <td className="table-head">Descrição</td>
+                <td className="table-head">Valor</td>
+                <td className="table-head">Data</td>
+              </tr>
+            </thead>
+            <tbody>
+              {props.data.findAllVendas.map((venda) => {
+                total = total + venda.price
+                return (
+                  <tr key={venda.id} className="table-hover">
+                    <td className="table-row">{venda.idAluno}</td>
+                    <td className="table-row">{venda.description}</td>
+                    <td className="table-row">{venda.price} €</td>
+                    <td className="table-row">{dayjs(venda.date).format('DD/MM/YYYY')}</td>
+                  </tr>
+                )
+              })}
+              <td className="table-row"></td>
+              <td className="table-row">Total</td>
+              <td className="table-row">{total} €</td>
+            </tbody>
+          </table>
+        </div>
       </div>
     )
   }

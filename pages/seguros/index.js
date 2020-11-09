@@ -5,45 +5,37 @@ import Link from 'next/link'
 
 const Seguros = (props) => {
   if (!props.errors) {
-    if (props.user && props.user !== 'Usuário não logado') {
-      return (
-        <div className="table-center">
-          <h2>Seguros</h2>
-          <Link href="/seguros/addSeguro">
-            <a>Registar Seguro</a>
-          </Link>
-          <div>
-            <table className="table">
-              <thead>
-                <tr>
-                  <td className="table-head">ID Aluno</td>
-                  <td className="table-head">Validade</td>
-                  <td className="table-head">Status</td>
-                </tr>
-              </thead>
-              <tbody>
-                {props.data.findAllSeguros.map((seguro) => {
-                  return (
-                    <tr key={seguro.id} className="table-hover">
-                      <td className="table-row">{seguro.idAluno}</td>
-                      <td className="table-row">{dayjs(seguro.fdate).format('DD/MM/YYYY')}</td>
-                      <td className="table-row">{dayjs().isBefore(dayjs(seguro.fdate)) ? <pre>Válido</pre> : <pre>Vencido</pre>}</td>
-                    </tr>
-                  )
-                })}
-              </tbody>
-            </table>
-          </div>
-          <pre>{props.data.findAllSeguros.status}</pre>
-        </div>
-
-      )
-    }
     return (
-      <div>
-        <p>{props.user}</p>
-        <p>{props.data}</p>
+      <div className="table-center">
+        <h2>Seguros</h2>
+        <Link href="/seguros/addSeguro">
+          <a>Registar Seguro</a>
+        </Link>
+        <div>
+          <table className="table">
+            <thead>
+              <tr>
+                <td className="table-head">ID Aluno</td>
+                <td className="table-head">Validade</td>
+                <td className="table-head">Status</td>
+              </tr>
+            </thead>
+            <tbody>
+              {props.data.findAllSeguros.map((seguro) => {
+                return (
+                  <tr key={seguro.id} className="table-hover">
+                    <td className="table-row">{seguro.idAluno}</td>
+                    <td className="table-row">{dayjs(seguro.fdate).format('DD/MM/YYYY')}</td>
+                    <td className="table-row">{dayjs().isBefore(dayjs(seguro.fdate)) ? <pre>Válido</pre> : <pre>Vencido</pre>}</td>
+                  </tr>
+                )
+              })}
+            </tbody>
+          </table>
+        </div>
+        <pre>{props.data.findAllSeguros.status}</pre>
       </div>
+
     )
   }
   return (

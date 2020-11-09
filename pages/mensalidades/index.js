@@ -4,37 +4,29 @@ import dayjs from 'dayjs'
 
 const Mensalidades = (props) => {
   if (!props.errors) {
-    if (props.user && props.user !== 'Usuário não logado') {
-      return (
-        <div>
-          <h2>Mensalidades</h2>
-          <a href="/mensalidades/addMensalidade">Nova Mensalidade</a>
-          <input type="text"></input>
-          <button type="submit">ok</button>
-          <div className="colum3">
-            {props.data.findAllMensalidades.map((mensalidade) => {
-              return (
-                <div key={mensalidade.id}>
-                  <div className="cardMensalidade">
-                    <h3>{mensalidade.idAluno}</h3>
-                    Mês pago: {mensalidade.monthPaid}
-                    <br />
-                    Data do Pagamento: {dayjs(mensalidade.paymentDate).format('DD/MM/YYYY')}
-                    <br />
-                    Valor: {mensalidade.price}
-                    <br />
-                  </div>
-                </div>
-              )
-            })}
-          </div>
-        </div>
-      )
-    }
     return (
       <div>
-        <p>{props.user}</p>
-        <p>{props.data}</p>
+        <h2>Mensalidades</h2>
+        <a href="/mensalidades/addMensalidade">Nova Mensalidade</a>
+        <input type="text"></input>
+        <button type="submit">ok</button>
+        <div className="colum3">
+          {props.data.findAllMensalidades.map((mensalidade) => {
+            return (
+              <div key={mensalidade.id}>
+                <div className="cardMensalidade">
+                  <h3>{mensalidade.idAluno}</h3>
+                    Mês pago: {mensalidade.monthPaid}
+                  <br />
+                    Data do Pagamento: {dayjs(mensalidade.paymentDate).format('DD/MM/YYYY')}
+                  <br />
+                    Valor: {mensalidade.price}
+                  <br />
+                </div>
+              </div>
+            )
+          })}
+        </div>
       </div>
     )
   }
