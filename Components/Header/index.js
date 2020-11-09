@@ -4,12 +4,7 @@ import { useState } from 'react'
 import auth0 from '../../lib/auth0'
 import Image from 'next/image'
 
-const Header = (props) => {
-  // console.log(props.logged)
-  // const [success, setSuccess] = useState(false)
-  // if (props.logged) {
-  //   setSuccess(true)
-  // }
+const Header = () => {
   return (
     <div className="header">
       <Link href="app">
@@ -28,20 +23,3 @@ const Header = (props) => {
 }
 export default Header
 
-export async function getServerSideProps({ req, res }) {
-  console.log(req)
-  const session = await auth0.getSession(req)
-  console.log(session)
-  if (session) {
-    return {
-      props: {
-        logged: true
-      }
-    }
-  }
-  return {
-    props: {
-      logged: false
-    }
-  }
-}
