@@ -113,7 +113,7 @@ const salvarSeguro = async (seguro, email) => {
       'Content-Type': 'application/json',
       Accept: 'application/json',
       Authorization:
-        'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjbGllbnQiOiJmcm9udC1lbmQtS2U0Z3JnNzRocjRkY2I2IiwiaWF0IjoxNTk3ODU3NTg2fQ.MVQIQxXkVgbhCFzYRwIiAtJZHbYN0UqiJGBndMLKAGY',
+        `${process.env.BEARER}`,
     },
     body: JSON.stringify({
       query: `mutation{
