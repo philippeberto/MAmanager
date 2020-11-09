@@ -66,7 +66,7 @@ export default Vendas
 export async function getServerSideProps({ req, res }) {
   const session = await auth0.getSession(req)
   if (session) {
-    const data = await fetch('http://localhost:3001/graphql', {
+    const data = await fetch('https://mamanagerapi.herokuapp.com/graphql', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

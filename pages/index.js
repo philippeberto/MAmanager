@@ -25,7 +25,7 @@ export default Index
 export async function getServerSideProps({ req, res }) {
   const session = await auth0.getSession(req)
   if (session) {
-    const data = await fetch('http://localhost:3001/graphql', {
+    const data = await fetch('https://mamanagerapi.herokuapp.com/graphql', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -35,19 +35,19 @@ export async function getServerSideProps({ req, res }) {
       },
       body: JSON.stringify({
         query: `{
-        somaMensalidadesByPeriod(user:"philippe.bjj@gmail.com",input:{
+        somaMensalidadesByPeriod(user:"${session.user.email}",input:{
           idate: "2020-11-01"
           fdate: "2020-11-30"
         })
-        somaDespesasByPeriod(user:"philippe.bjj@gmail.com",input:{
+        somaDespesasByPeriod(user:"${session.user.email}",input:{
           idate: "2020-11-01"
           fdate: "2020-11-30"
         })
-        somaVendasByPeriod(user:"philippe.bjj@gmail.com",input:{
+        somaVendasByPeriod(user:"${session.user.email}",input:{
           idate: "2020-11-01"
           fdate: "2020-11-30"
         })
-        somaComprasByPeriod(user:"philippe.bjj@gmail.com",input:{
+        somaComprasByPeriod(user:"${session.user.email}",input:{
           idate: "2020-11-01"
           fdate: "2020-11-30"
         })

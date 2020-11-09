@@ -88,7 +88,7 @@ export async function getServerSideProps({ req, res }) {
 const salvarCompra = async (despesa, email) => {
   console.log(despesa)
   console.log(email)
-  const data = await fetch('http://localhost:3001/graphql', {
+  const data = await fetch('https://mamanagerapi.herokuapp.com/graphql', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
