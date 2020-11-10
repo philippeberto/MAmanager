@@ -5,7 +5,7 @@ import Image from 'next/image'
 const Header = () => {
   return (
     <div className="header">
-      <Link href="app">
+      <Link href="/">
         <a>
           <Image src='/img/GBlogo.png' width='210' height='45' className="logo" />
         </a>
