@@ -40,8 +40,9 @@ export async function getServerSideProps({ req, res }) {
   } else {
     return {
       props: {
-        user: "Usuário",
-      },
+        user: 'Usuário não logado',
+        data: 'Dados Inacessíveis'
+      }
     };
   }
 }

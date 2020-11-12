@@ -4,8 +4,8 @@ const Footer = () => {
   return (
     <div className='footer'>
       <footer>
-        <strong>2020 Made by <a href="http://resume.philippeberto.vercel.app"> Philippe Berto</a>. </strong>
-        <b>Versão</b> 0.1
+        2020 Made by <a href="http://resume.philippeberto.vercel.app"> Philippe Berto</a>.
+        Version 0.1
       </footer>
     </div >
   )

@@ -14,7 +14,7 @@ const Mensalidades = (props) => {
           {props.data.findAllMensalidades.map((mensalidade) => {
             return (
               <div key={mensalidade.id}>
-                <div className="cardMensalidade">
+                <div className="cardAluno">
                   <h3>{mensalidade.idAluno}</h3>
                     Mês pago: {mensalidade.monthPaid}
                   <br />

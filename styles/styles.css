@@ -123,23 +123,9 @@ a:hover {
 }
 
 .colum3 {
-  -webkit-columns: 3 200px;
-  -moz-columns: 3 200px;
-  columns: 3 200px;
-  -webkit-column-gap: 1px;
-  -moz-column-gap: 1px;
-  column-gap: 1px;
-}
-
-.cardAluno {
-  display: inline-block;
-  border: 2px solid #7fbb63;
-  padding: 6px;
-  margin-top: 2px;
-  margin-bottom: 6px;
-  border-radius: 1rem;
-  width: 300px;
-  font-size: 14px;
+  display: grid;
+  grid-auto-flow: row;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
 }
 
 .cardMensalidade {

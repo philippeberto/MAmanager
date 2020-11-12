@@ -17,9 +17,9 @@ const Alunos = (props) => {
             return (
               <div key={aluno.id}>
                 <div className="cardAluno">
-                  <h3>{aluno.aluno}</h3>
+                  <div className='cardTittle'>{aluno.aluno}</div>
                   <Link href={`/alunos/${aluno.id}/updateAluno`}>
-                    <a>
+                    <a className='editIcon'>
                       <Image
                         src="/img/icon-edit.png"
                         width='20'
@@ -27,23 +27,23 @@ const Alunos = (props) => {
                         alt="edit icon"
                       />
                     </a>
-                  </Link>
-                    ID: {aluno.id}
+                  </Link><br />
+                  ({aluno.id})
                   <br />
-                    Nasc.: {dayjs(aluno.birthDate).format('DD/MM/YYYY')}
-                  <br />
-                    Localização: {aluno.location}
-                  <br />
-                    Vencimento: {aluno.dueDate}
-                  <br />
-                    Sexo: {aluno.gender}
-                  <br />
+                  <div className='cardDescription'>
+                    Idade: {dayjs().diff(dayjs(aluno.birthDate), 'year')} anos
+                    <br />
+                    Vencimento: dia {aluno.dueDate}
+                    <br />
+                    Faixa: {aluno.degree}
+                    <br />
+                  </div>
                 </div>
               </div>
             )
           })}
         </div>
-      </div>
+      </div >
     )
   }
   return (

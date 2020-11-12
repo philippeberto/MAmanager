@@ -271,6 +271,6 @@ const salvarAluno = async (aluno, id) => {
     })
     const alunoDB = await data.json()
     const alun = alunoDB.data
-    console.log(alun);
   } catch (err) { console.log(err) }
 };
+
