@@ -2,20 +2,34 @@ import React from 'react'
 import auth0 from '../lib/auth0'
 
 const Index = (props) => {
+  const saldo = props.mensalidades + props.vendas - props.compras - props.despesas
   return (
-    <div>
-      <h3>Mensalidades</h3>
-      <p>Resumo das Mensalidades</p>
-      <p>Total no Mês atual: {props.mensalidades}  </p>
-      <h3>Vendas</h3>
-      <p>Resumo das vendas</p>
-      <p>Total no Mês atual: {props.vendas} </p>
-      <h3>Compras</h3>
-      <p>Resumo das compras</p>
-      <p>Total no Mês atual: {props.compras} </p>
-      <h3>Despesas</h3>
-      <p>Resumo das despesas</p>
-      <p>Total no Mês atual: {props.despesas}  </p>
+    <div className='index'>
+      <div className='res-card dark-green'>
+        <div className='res-tittle'>Mensalidades</div>
+        <div className='euro'>€</div>
+        <p className='valor'>{props.mensalidades}</p>
+      </div>
+      <div className='res-card green'>
+        <div className='res-tittle'>Vendas</div>
+        <div className='euro'>€</div>
+        <p className='valor'>{props.vendas}</p>
+      </div>
+      <div className='res-card yellow'>
+        <div className='res-tittle'>Compras</div>
+        <div className='euro'>€</div>
+        <p className='valor'>{props.compras}</p>
+      </div>
+      <div className='res-card red'>
+        <div className='res-tittle'>Despesas</div>
+        <div className='euro'>€</div>
+        <p className='valor'>{props.despesas}</p>
+      </div>
+      <div className='res-card blue'>
+        <div className='res-tittle'>Saldo</div>
+        <div className='euro'>€</div>
+        <p className='valor'>{saldo}</p>
+      </div>
     </div>
   )
 }
