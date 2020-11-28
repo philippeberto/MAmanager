@@ -51,7 +51,7 @@ export async function getServerSideProps({ req, res }) {
         'Content-Type': 'application/json',
         Accept: 'application/json',
         Authorization:
-          `${process.env.BEARER}`,
+          `"${process.env.BEARER}"`,
       },
       body: JSON.stringify({
         query: `{

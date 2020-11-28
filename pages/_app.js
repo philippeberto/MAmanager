@@ -9,6 +9,7 @@ import Footer from '../Components/Footer'
 import Link from 'next/link'
 import Image from 'next/image'
 
+
 const MyApp = ({ Component, pageProps }) => {
   if (pageProps.user === 'Usuário não logado') {
     return (

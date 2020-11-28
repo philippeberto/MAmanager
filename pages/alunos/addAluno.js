@@ -198,7 +198,7 @@ const salvarAluno = async (aluno, user) => {
       'Content-Type': 'application/json',
       Accept: 'application/json',
       Authorization:
-        `${process.env.BEARER}`,
+        `"${process.env.BEARER}"`,
     },
     body: JSON.stringify({
       query: `mutation{
@@ -221,5 +221,5 @@ const salvarAluno = async (aluno, user) => {
   })
   const alunoDB = await data.json()
   const novoAluno = alunoDB.data
-  console.log(novoAluno)
+  console.log(alunoDB)
 }

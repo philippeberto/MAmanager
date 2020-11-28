@@ -38,6 +38,7 @@ export default Index
 
 export async function getServerSideProps({ req, res }) {
   const session = await auth0.getSession(req)
+  console.log(process.env.AUTH0_CLIENT_ID)
   if (session) {
     const data = await fetch('https://mamanagerapi.herokuapp.com/graphql', {
       method: 'POST',
@@ -45,7 +46,7 @@ export async function getServerSideProps({ req, res }) {
         'Content-Type': 'application/json',
         Accept: 'application/json',
         Authorization:
-          `${process.env.BEARER}`,
+          `"${process.env.BEARER}"`,
       },
       body: JSON.stringify({
         query: `{
