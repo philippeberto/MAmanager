@@ -51,7 +51,6 @@ const Alunos = (props) => {
       {props.errors.map(erro => {
         return <p>{JSON.stringify(erro.message, null, 2)}</p>
       })}
-    )
     </div>
   )
 }
@@ -59,6 +58,7 @@ const Alunos = (props) => {
 export default Alunos
 
 export async function getServerSideProps({ req, res }) {
+  console.log(` AUTH0_CLIENT_ID: "${process.env.AUTH0_CLIENT_ID}"`)
   console.log(`"${process.env.BEARER}"`)
   const session = await auth0.getSession(req)
   if (session) {
