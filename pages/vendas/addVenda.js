@@ -24,7 +24,7 @@ const NovaVenda = (props) => {
         .required('Obrigatório'),
     }),
     onSubmit: (values) => {
-      salvarVenda(values, props.user.email)
+      salvarVenda(values, props.user.email, props.bearer)
       alert(
         `idAluno: ${values.idAluno},price: ${values.price},date: ${values.date},description: ${values.description}`,
       )
@@ -95,10 +95,12 @@ export default NovaVenda
 
 export async function getServerSideProps({ req, res }) {
   const session = await auth0.getSession(req)
+  const bearer = process.env.BEARER
   if (session) {
     return {
       props: {
-        user: session.user
+        user: session.user,
+        bearer
       }
     }
   }
@@ -109,14 +111,14 @@ export async function getServerSideProps({ req, res }) {
   }
 }
 
-const salvarVenda = async (venda, user) => {
+const salvarVenda = async (venda, user, bearer) => {
   const data = await fetch('https://mamanagerapi.herokuapp.com/graphql', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
       Accept: 'application/json',
       Authorization:
-        `"${process.env.BEARER}"`,
+        `${bearer}`,
     },
     body: JSON.stringify({
       query: `mutation{
@@ -132,5 +134,5 @@ const salvarVenda = async (venda, user) => {
       }`,
     }),
   })
-  console.log(data.json())
+  console.log(data)
 }

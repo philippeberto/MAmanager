@@ -21,7 +21,7 @@ const CriarMensalidade = (props) => {
       monthPaid: Yup.number(),
     }),
     onSubmit: (values) => {
-      salvarMensalidade(values, props.user.email)
+      salvarMensalidade(values, props.user.email, props.bearer)
       alert(
         `idAluno: ${values.idAluno},price: ${values.price},paymentDate: ${values.paymentDate},monthPaid: ${values.monthPaid}`,
       )
@@ -92,10 +92,12 @@ export default CriarMensalidade
 
 export async function getServerSideProps({ req, res }) {
   const session = await auth0.getSession(req)
+  const bearer = process.env.BEARER
   if (session) {
     return {
       props: {
         user: session.user,
+        bearer
       },
     }
   }
@@ -107,14 +109,14 @@ export async function getServerSideProps({ req, res }) {
   }
 }
 
-const salvarMensalidade = async (mensalidade, user) => {
+const salvarMensalidade = async (mensalidade, user, bearer) => {
   const data = await fetch('https://mamanagerapi.herokuapp.com/graphql', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
       Accept: 'application/json',
       Authorization:
-        `"${process.env.BEARER}"`,
+        `${bearer}`,
     },
     body: JSON.stringify({
       query: `mutation{

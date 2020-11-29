@@ -58,8 +58,6 @@ const Alunos = (props) => {
 export default Alunos
 
 export async function getServerSideProps({ req, res }) {
-  console.log(` AUTH0_CLIENT_ID: "${process.env.AUTH0_CLIENT_ID}"`)
-  console.log(`"${process.env.BEARER}"`)
   const session = await auth0.getSession(req)
   if (session) {
     const data = await fetch('https://mamanagerapi.herokuapp.com/graphql', {
@@ -68,7 +66,7 @@ export async function getServerSideProps({ req, res }) {
         'Content-Type': 'application/json',
         Accept: 'application/json',
         Authorization:
-          `"${process.env.BEARER}"`,
+          `${process.env.BEARER}`,
       },
       body: JSON.stringify({
         query: `{ 

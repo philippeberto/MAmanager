@@ -35,7 +35,6 @@ const Mensalidades = (props) => {
       {props.errors.map(erro => {
         return <p>{JSON.stringify(erro.message, null, 2)}</p>
       })}
-    )
     </div>
   )
 }
@@ -51,7 +50,7 @@ export async function getServerSideProps({ req, res }) {
         'Content-Type': 'application/json',
         Accept: 'application/json',
         Authorization:
-          `"${process.env.BEARER}"`,
+          `${process.env.BEARER}`,
       },
       body: JSON.stringify({
         query: `{

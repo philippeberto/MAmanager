@@ -4,7 +4,6 @@ import auth0 from "../lib/auth0";
 const Usuario = (props) => {
   if (!props.errors) {
     const img = props.user.picture;
-    console.log(img)
     return (
 
       <div className="profile ">
@@ -22,7 +21,6 @@ const Usuario = (props) => {
       {props.errors.map(erro => {
         return <p>{JSON.stringify(erro.message, null, 2)}</p>
       })}
-    )
     </div>
   )
 };
@@ -31,6 +29,7 @@ export default Usuario;
 
 export async function getServerSideProps({ req, res }) {
   const session = await auth0.getSession(req);
+  console.log(session)
   if (session) {
     return {
       props: {

@@ -18,17 +18,14 @@ const CriarDespesa = (props) => {
       description: Yup.string().required('Obrigatório'),
       price: Yup.number().required('Obrigatório'),
       dueDate: Yup.date().required('Obrigatório'),
-      referenceMonth: Yup.string().max(
-        14,
-        'O mês deve ter no máximo 14 caracteres',
-      ),
+      referenceMonth: Yup.number().max(2, 'Insira um número de 1 à 12'),
       paymentDate: Yup.string()
         .max(30, 'Localidade deve ter no máximo 30 caracteres')
         .required('Obrigatório'),
       paid: Yup.boolean(),
     }),
     onSubmit: (values) => {
-      salvarDespesa(values, props.user.email)
+      salvarDespesa(values, props.user.email, props.bearer)
       alert(`Despesa ${values.description} salva com sucesso!`)
     },
   })
@@ -79,7 +76,8 @@ const CriarDespesa = (props) => {
           <input
             value={values.referenceMonth}
             onChange={handleChange}
-            type="text"
+            type="number"
+            maxLength="2"
             id="referenceMonth"
             name="referenceMonth"
           ></input>
@@ -108,10 +106,12 @@ export default CriarDespesa
 
 export async function getServerSideProps({ req, res }) {
   const session = await auth0.getSession(req)
+  const bearer = process.env.BEARER
   if (session) {
     return {
       props: {
         user: session.user,
+        bearer
       },
     }
   }
@@ -123,14 +123,14 @@ export async function getServerSideProps({ req, res }) {
   }
 }
 
-const salvarDespesa = async (despesa, email) => {
+const salvarDespesa = async (despesa, email, bearer) => {
   const data = await fetch('https://mamanagerapi.herokuapp.com/graphql', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
       Accept: 'application/json',
       Authorization:
-        `"${process.env.BEARER}"`,
+        `${bearer}`,
     },
     body: JSON.stringify({
       query: `mutation{
@@ -148,4 +148,5 @@ const salvarDespesa = async (despesa, email) => {
       }`,
     }),
   })
+  console.log(data)
 }

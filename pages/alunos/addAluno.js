@@ -42,7 +42,7 @@ const CriarAluno = (props) => {
       tresponsavel: Yup.string().max(13, 'O telemóvel deve ter no máximo'),
     }),
     onSubmit: (values) => {
-      salvarAluno(values, props.user.email)
+      salvarAluno(values, props.user.email, props.bearer)
       alert(
         `nome: ${values.nome},telemovel: ${values.telemovel},ndata: ${values.ndata},endereco: ${values.endereco},localidade: ${values.localidade},vdata: ${values.vdata},sexo: ${values.sexo},responsavel: ${values.responsavel},tresponsavel: ${values.tresponsavel},`,
       )
@@ -176,10 +176,12 @@ export default CriarAluno
 
 export async function getServerSideProps({ req, res }) {
   const session = await auth0.getSession(req)
+  const bearer = process.env.BEARER
   if (session) {
     return {
       props: {
         user: session.user,
+        bearer
       },
     }
   }
@@ -191,14 +193,15 @@ export async function getServerSideProps({ req, res }) {
   }
 }
 
-const salvarAluno = async (aluno, user) => {
+const salvarAluno = async (aluno, user, bearer) => {
+  console.log(bearer)
   const data = await fetch('https://mamanagerapi.herokuapp.com/graphql', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
       Accept: 'application/json',
       Authorization:
-        `"${process.env.BEARER}"`,
+        `${bearer}`,
     },
     body: JSON.stringify({
       query: `mutation{

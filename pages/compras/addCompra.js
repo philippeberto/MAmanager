@@ -16,7 +16,7 @@ const addCompra = (props) => {
       date: Yup.date().required('Obrigatório')
     }),
     onSubmit: (values) => {
-      salvarCompra(values, props.user.email)
+      salvarCompra(values, props.user.email, props.bearer)
       alert(`Compra ${values.description} salva com sucesso!`)
     },
   })
@@ -70,10 +70,12 @@ export default addCompra
 
 export async function getServerSideProps({ req, res }) {
   const session = await auth0.getSession(req)
+  const bearer = process.env.BEARER
   if (session) {
     return {
       props: {
         user: session.user,
+        bearer
       },
     }
   }
@@ -85,16 +87,14 @@ export async function getServerSideProps({ req, res }) {
   }
 }
 
-const salvarCompra = async (despesa, email) => {
-  console.log(despesa)
-  console.log(email)
+const salvarCompra = async (despesa, email, bearer) => {
   const data = await fetch('https://mamanagerapi.herokuapp.com/graphql', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
       Accept: 'application/json',
       Authorization:
-        `"${process.env.BEARER}"`,
+        `${bearer}`,
     },
     body: JSON.stringify({
       query: `mutation{
