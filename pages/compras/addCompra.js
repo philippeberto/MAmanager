@@ -100,7 +100,7 @@ const salvarCompra = async (despesa, email, bearer) => {
       query: `mutation{
         createCompra(user:"${email}", input: {
           description: "${despesa.description}"
-          price: ${despesa.price}, 
+          price: ${parseFloat(despesa.price)}, 
           date: "${despesa.date}", 
         }){
           id

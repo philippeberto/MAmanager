@@ -123,7 +123,7 @@ const salvarSeguro = async (seguro, email, bearer) => {
           idAluno: "${seguro.idAluno}",
           idate: "${seguro.idate}",
           fdate: "${seguro.fdate}",
-          price: ${seguro.price},
+          price: ${parseFloat(seguro.price)},
         }){
           idAluno
         }

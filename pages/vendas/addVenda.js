@@ -124,7 +124,7 @@ const salvarVenda = async (venda, user, bearer) => {
       query: `mutation{
         createVenda(user:"${user}", input: {
           idAluno: "${venda.idAluno}",
-          price: ${venda.price},
+          price: ${parseFloat(venda.price)},
           date: "${venda.date}",
           description: "${venda.description}",
         }){

@@ -122,7 +122,7 @@ const salvarMensalidade = async (mensalidade, user, bearer) => {
       query: `mutation{
         createMensalidade(user:"${user}", input: {
           idAluno: "${mensalidade.idAluno}",
-          price: ${mensalidade.price},
+          price: ${parseFloat(mensalidade.price)},
           paymentDate: "${mensalidade.paymentDate}",
           monthPaid: ${mensalidade.monthPaid}
         })

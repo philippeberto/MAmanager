@@ -45,7 +45,7 @@ const Despesas = (props) => {
                 <td className="table-row"></td>
                 <td className="table-row"></td>
                 <td className="table-row">Total</td>
-                <td className="table-row">{total} €</td>
+                <td className="table-row">{total.toFixed(2)} €</td>
                 <td className="table-row"></td>
               </tr>
             </tbody>

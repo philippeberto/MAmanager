@@ -18,10 +18,8 @@ const CriarDespesa = (props) => {
       description: Yup.string().required('Obrigatório'),
       price: Yup.number().required('Obrigatório'),
       dueDate: Yup.date().required('Obrigatório'),
-      referenceMonth: Yup.number().max(2, 'Insira um número de 1 à 12'),
-      paymentDate: Yup.string()
-        .max(30, 'Localidade deve ter no máximo 30 caracteres')
-        .required('Obrigatório'),
+      referenceMonth: Yup.number().max(12, 'Insira um número de 1 à 12').required('Obrigatório'),
+      paymentDate: Yup.date().required('Obrigatório'),
       paid: Yup.boolean(),
     }),
     onSubmit: (values) => {
@@ -80,7 +78,10 @@ const CriarDespesa = (props) => {
             maxLength="2"
             id="referenceMonth"
             name="referenceMonth"
-          ></input>
+          />
+          {touched.referenceMonth && errors.referenceMonth ? (
+            <text>{errors.referenceMonth}</text>
+          ) : null}
           <div>
             <label htmlFor="paymentDate">Dia do Pagamento: </label>
             <input
@@ -136,7 +137,7 @@ const salvarDespesa = async (despesa, email, bearer) => {
       query: `mutation{
         createDespesa(user:"${email}", input: {
           description: "${despesa.description}"
-          price: ${despesa.price}, 
+          price: ${parseFloat(despesa.price)}, 
           dueDate: "${despesa.dueDate}", 
           referenceMonth: ${parseInt(despesa.referenceMonth)}, 
           paymentDate: "${despesa.paymentDate}",
