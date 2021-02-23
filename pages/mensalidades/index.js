@@ -1,33 +1,82 @@
 import React from 'react'
 import auth0 from '../../lib/auth0'
 import dayjs from 'dayjs'
+import { useFormik } from 'formik'
+import * as Yup from 'yup'
 
 const Mensalidades = (props) => {
+  const { handleSubmit, handleChange, values, touched, errors } = useFormik({
+    initialValues: {
+      inicialDate: '',
+      finalDate: '',
+    },
+    validationSchema: Yup.object({
+      inicialDate: Yup.date().required(''),
+      finalDate: Yup.date().required(''),
+    }),
+    onSubmit: (values) => {
+      buscarMensalidade(values, props.user.email, props.bearer)
+      alert(
+        `inicialDate: ${values.inicialDate},finalDate: ${values.finalDate}`,
+      )
+    },
+  })
   if (!props.errors) {
     return (
       <div>
         <h2>Mensalidades</h2>
         <a href="/mensalidades/addMensalidade">Nova Mensalidade</a>
-        <input type="text"></input>
-        <button type="submit">ok</button>
-        <div className="colum3">
-          {props.data.findAllMensalidades.map((mensalidade) => {
-            return (
-              <div key={mensalidade.id}>
-                <div className="cardAluno">
-                  <h3>{mensalidade.idAluno}</h3>
-                    Mês pago: {mensalidade.monthPaid}
-                  <br />
-                    Data do Pagamento: {dayjs(mensalidade.paymentDate).format('DD/MM/YYYY')}
-                  <br />
-                    Valor: {mensalidade.price}
-                  <br />
-                </div>
-              </div>
-            )
-          })}
+        <h4>Período</h4>
+        <form onSubmit={handleSubmit}>
+        <div style={{display: 'inline-block'}}>
+          <label htmlFor="inicialDate">Data Inicial</label><br />
+          <input
+            value={values.inicialDate}
+            onChange={handleChange}
+            type="date"
+            id="inicialDate"
+            name="inicialDate"
+            required
+          />
+          {touched.inicialDate && errors.inicialDate ? 
+          <text>{errors.inicialDate}</text>
+          : null}
         </div>
+        <div style={{display: 'inline-block'}}>
+          <label htmlFor="finalDate">Data Final</label><br />
+          <input
+            value={values.finalDate}
+            onChange={handleChange}
+            type="date"
+            id="finalDate"
+            name="finalDate"
+            required
+          />
+          {touched.finalDate && errors.finalDate ? 
+          <text>{errors.finalDate}</text>
+          : null}
+        </div>
+        <input type="submit" value="Buscar"></input>
+      </form>
+
+      <div className="colum3">
+        {props.data.map((mensalidade) => {
+          return (
+            <div key={mensalidade.id}>
+              <div className="cardAluno">
+                  <h3>{mensalidade.nomeAluno}</h3>
+                  Mês pago: {mensalidade.monthPaid}
+                <br />
+                  Data do Pagamento: {dayjs(mensalidade.paymentDate).format('DD/MM/YYYY')}
+                <br />
+                  Valor: {mensalidade.price}
+                <br />
+              </div>
+            </div>
+          )
+        })}
       </div>
+    </div>
     )
   }
   return (
@@ -44,7 +93,7 @@ export default Mensalidades
 export async function getServerSideProps({ req, res }) {
   const session = await auth0.getSession(req)
   if (session) {
-    const data = await fetch('https://mamanagerapi.herokuapp.com/graphql', {
+    const data = await fetch('http://localhost:3001/graphql', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -56,7 +105,7 @@ export async function getServerSideProps({ req, res }) {
         query: `{
           findAllMensalidades(user:"${session.user.email}"){
             id
-            idAluno
+            aluno {id}
             monthPaid
             paymentDate
             price
@@ -65,7 +114,29 @@ export async function getServerSideProps({ req, res }) {
       }),
     })
     const mensalidadesDB = await data.json()
-    const mensalidades = mensalidadesDB.data
+    const mensalidades = JSON.stringify(mensalidadesDB.data)
+    for (const mensalidade of mensalidadesDB.data.findAllMensalidades){
+      const data = await fetch('http://localhost:3001/graphql', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Accept: 'application/json',
+          Authorization:
+            `${process.env.BEARER}`,
+        },
+        body: JSON.stringify({
+          query: `{
+            findAluno(user:"${session.user.email}", id:"${mensalidade.aluno.id}"){
+              aluno
+            }
+          }`,
+        }),
+      })
+      const alunoDB = await data.json()
+      const aluno = alunoDB.data.findAluno.aluno
+      mensalidade.nomeAluno = aluno
+    }
+    console.log(mensalidadesDB.data.findAllMensalidades);
     let errors = null
     if (mensalidadesDB.errors) {
       errors = mensalidadesDB.errors
@@ -74,7 +145,7 @@ export async function getServerSideProps({ req, res }) {
       props: {
         errors,
         user: session.user,
-        data: mensalidades,
+        data: mensalidadesDB.data.findAllMensalidades
       },
     }
   }
@@ -84,4 +155,8 @@ export async function getServerSideProps({ req, res }) {
       data: 'Dados inacessíveis',
     },
   }
+}
+
+async function buscarMensalidade(values, user, bearer) {
+
 }
