@@ -93,7 +93,7 @@ export default Mensalidades
 export async function getServerSideProps({ req, res }) {
   const session = await auth0.getSession(req)
   if (session) {
-    const data = await fetch('http://localhost:3001/graphql', {
+    const data = await fetch('https://mamanagerapi.herokuapp.com/graphql', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -115,7 +115,7 @@ export async function getServerSideProps({ req, res }) {
     })
     const mensalidadesDB = await data.json()
     for (const mensalidade of mensalidadesDB.data.findAllMensalidades) {
-      const data = await fetch('http://localhost:3001/graphql', {
+      const data = await fetch('https://mamanagerapi.herokuapp.com/graphql', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
