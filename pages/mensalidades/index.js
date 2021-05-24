@@ -28,55 +28,55 @@ const Mensalidades = (props) => {
         <a href="/mensalidades/addMensalidade">Nova Mensalidade</a>
         <h4>Período</h4>
         <form onSubmit={handleSubmit}>
-        <div style={{display: 'inline-block'}}>
-          <label htmlFor="inicialDate">Data Inicial</label><br />
-          <input
-            value={values.inicialDate}
-            onChange={handleChange}
-            type="date"
-            id="inicialDate"
-            name="inicialDate"
-            required
-          />
-          {touched.inicialDate && errors.inicialDate ? 
-          <text>{errors.inicialDate}</text>
-          : null}
-        </div>
-        <div style={{display: 'inline-block'}}>
-          <label htmlFor="finalDate">Data Final</label><br />
-          <input
-            value={values.finalDate}
-            onChange={handleChange}
-            type="date"
-            id="finalDate"
-            name="finalDate"
-            required
-          />
-          {touched.finalDate && errors.finalDate ? 
-          <text>{errors.finalDate}</text>
-          : null}
-        </div>
-        <input type="submit" value="Buscar"></input>
-      </form>
+          <div style={{ display: 'inline-block' }}>
+            <label htmlFor="inicialDate">Data Inicial</label><br />
+            <input
+              value={values.inicialDate}
+              onChange={handleChange}
+              type="date"
+              id="inicialDate"
+              name="inicialDate"
+              required
+            />
+            {touched.inicialDate && errors.inicialDate ?
+              <text>{errors.inicialDate}</text>
+              : null}
+          </div>
+          <div style={{ display: 'inline-block' }}>
+            <label htmlFor="finalDate">Data Final</label><br />
+            <input
+              value={values.finalDate}
+              onChange={handleChange}
+              type="date"
+              id="finalDate"
+              name="finalDate"
+              required
+            />
+            {touched.finalDate && errors.finalDate ?
+              <text>{errors.finalDate}</text>
+              : null}
+          </div>
+          <input type="submit" value="Buscar"></input>
+        </form>
 
-      <div className="colum3">
-        {props.data.map((mensalidade) => {
-          return (
-            <div key={mensalidade.id}>
-              <div className="cardAluno">
+        <div className="colum3">
+          {props.data.map((mensalidade) => {
+            return (
+              <div key={mensalidade.id}>
+                <div className="cardAluno">
                   <h3>{mensalidade.nomeAluno}</h3>
                   Mês pago: {mensalidade.monthPaid}
-                <br />
+                  <br />
                   Data do Pagamento: {dayjs(mensalidade.paymentDate).format('DD/MM/YYYY')}
-                <br />
+                  <br />
                   Valor: {mensalidade.price}
-                <br />
+                  <br />
+                </div>
               </div>
-            </div>
-          )
-        })}
+            )
+          })}
+        </div>
       </div>
-    </div>
     )
   }
   return (
@@ -105,7 +105,7 @@ export async function getServerSideProps({ req, res }) {
         query: `{
           findAllMensalidades(user:"${session.user.email}"){
             id
-            aluno {id}
+            idAluno
             monthPaid
             paymentDate
             price
@@ -114,8 +114,7 @@ export async function getServerSideProps({ req, res }) {
       }),
     })
     const mensalidadesDB = await data.json()
-    const mensalidades = JSON.stringify(mensalidadesDB.data)
-    for (const mensalidade of mensalidadesDB.data.findAllMensalidades){
+    for (const mensalidade of mensalidadesDB.data.findAllMensalidades) {
       const data = await fetch('http://localhost:3001/graphql', {
         method: 'POST',
         headers: {
@@ -126,7 +125,7 @@ export async function getServerSideProps({ req, res }) {
         },
         body: JSON.stringify({
           query: `{
-            findAluno(user:"${session.user.email}", id:"${mensalidade.aluno.id}"){
+            findAluno(user:"${session.user.email}", id:"${mensalidade.idAluno}"){
               aluno
             }
           }`,
@@ -136,7 +135,7 @@ export async function getServerSideProps({ req, res }) {
       const aluno = alunoDB.data.findAluno.aluno
       mensalidade.nomeAluno = aluno
     }
-    console.log(mensalidadesDB.data.findAllMensalidades);
+    console.log(mensalidadesDB.data.findAllMensalidades)
     let errors = null
     if (mensalidadesDB.errors) {
       errors = mensalidadesDB.errors

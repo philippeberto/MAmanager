@@ -1,8 +1,8 @@
-import React from "react";
-import { useFormik } from "formik";
-import * as Yup from "yup";
-import auth0 from "../../../lib/auth0";
-import dayjs from "dayjs";
+import React from "react"
+import { useFormik } from "formik"
+import * as Yup from "yup"
+import auth0 from "../../../lib/auth0"
+import dayjs from "dayjs"
 
 const EditarAluno = (props) => {
   const { handleSubmit, handleChange, values, touched, errors } = useFormik({
@@ -44,22 +44,22 @@ const EditarAluno = (props) => {
     }),
     onSubmit: (values) => {
       const novoAluno = [
-        { nome: `${values.nome}` },
-        { telemovel: `${values.telemovel}` },
-        { ndata: `${values.ndata}` },
-        { endereco: `${values.endereco}` },
-        { localidade: `${values.localidade}` },
-        { vdata: `${values.vdata}` },
-        { sexo: `${values.sexo}` },
-        { responsavel: `${values.responsavel}` },
-        { tresponsavel: `${values.tresponsavel}` },
-      ];
-      salvarAluno(values, props.data.findAluno.id);
+        { nome: values.nome },
+        { telemovel: values.telemovel },
+        { ndata: values.ndata },
+        { endereco: values.endereco },
+        { localidade: values.localidade },
+        { vdata: values.vdata },
+        { sexo: values.sexo },
+        { responsavel: values.responsavel },
+        { tresponsavel: values.tresponsavel },
+      ]
+      salvarAluno(props.user, values, props.data.findAluno.id)
       alert(
         `nome: ${values.nome},telemovel: ${values.telemovel},ndata: ${values.ndata},endereco: ${values.endereco},localidade: ${values.localidade},vdata: ${values.vdata},sexo: ${values.sexo},responsavel: ${values.responsavel},tresponsavel: ${values.tresponsavel},`
-      );
+      )
     },
-  });
+  })
 
   return (
     <div className="conteudo">
@@ -183,19 +183,19 @@ const EditarAluno = (props) => {
         <input type="submit" value="Cadastrar"></input>
       </form>
     </div>
-  );
-};
+  )
+}
 
 export async function getServerSideProps({ req, res }) {
   const session = await auth0.getSession(req)
   if (session) {
-    const data = await fetch('https://mamanagerapi.herokuapp.com/graphql', {
+    const data = await fetch('http://localhost:3001/graphql', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
         Accept: 'application/json',
         Authorization:
-          `"${process.env.BEARER}"`,
+          `${process.env.BEARER}`,
       },
       body: JSON.stringify({
         query: `{ 
@@ -216,7 +216,6 @@ export async function getServerSideProps({ req, res }) {
 
     const alunoDB = await data.json()
     const aluno = alunoDB.data
-    //console.log(aluno)
     let errors = null
     if (alunoDB.errors) {
       errors = alunoDB.errors
@@ -237,10 +236,10 @@ export async function getServerSideProps({ req, res }) {
   }
 }
 
-export default EditarAluno;
+export default EditarAluno
 
-const salvarAluno = async (aluno, id) => {
-  console.log(id)
+const salvarAluno = async (user, aluno, id) => {
+  console.log(id, user)
   try {
     const data = await fetch("http://localhost:3001/graphql", {
       method: "POST",
@@ -252,7 +251,7 @@ const salvarAluno = async (aluno, id) => {
       },
       body: JSON.stringify({
         query: `mutation{
-        updateAluno(id:"${id}", input:{
+        updateAluno(user: "${user}", id:"${id}", input:{
           aluno: "${aluno.nome}"
           phone: "${aluno.telemovel}", 
           birthDate: "${aluno.ndata}", 
@@ -271,6 +270,7 @@ const salvarAluno = async (aluno, id) => {
     })
     const alunoDB = await data.json()
     const alun = alunoDB.data
+    console.log(alun)
   } catch (err) { console.log(err) }
-};
+}
 

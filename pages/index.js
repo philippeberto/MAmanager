@@ -39,9 +39,9 @@ const Index = (props) => {
 export default Index
 
 export async function getServerSideProps({ req, res }) {
-  const date = new Date();
-  const firstDay = new Date(date.getFullYear(), date.getMonth(), 1);
-  const lastDay = new Date(date.getFullYear(), date.getMonth() + 1, 0);
+  const date = new Date()
+  const firstDay = new Date(date.getFullYear(), date.getMonth(), 1)
+  const lastDay = new Date(date.getFullYear(), date.getMonth() + 1, 0)
   const session = await auth0.getSession(req)
   if (session) {
     const data = await fetch('https://mamanagerapi.herokuapp.com/graphql', {
@@ -75,10 +75,10 @@ export async function getServerSideProps({ req, res }) {
     })
     const mensalidadesDB = await data.json()
 
-    const mensalidades = mensalidadesDB.data.somaMensalidadesByPeriod.toFixed(2)
-    const despesas = mensalidadesDB.data.somaDespesasByPeriod.toFixed(2)
-    const vendas = mensalidadesDB.data.somaVendasByPeriod.toFixed(2)
-    const compras = mensalidadesDB.data.somaComprasByPeriod.toFixed(2)
+    const mensalidades = mensalidadesDB.data.somaMensalidadesByPeriod ? mensalidadesDB.data.somaMensalidadesByPeriod.toFixed(2) : 0
+    const despesas = mensalidadesDB.data.somaDespesasByPeriod ? mensalidadesDB.data.somaDespesasByPeriod.toFixed(2) : 0
+    const vendas = mensalidadesDB.data.somaVendasByPeriod ? mensalidadesDB.data.somaVendasByPeriod.toFixed(2) : 0
+    const compras = mensalidadesDB.data.somaComprasByPeriod ? mensalidadesDB.data.somaComprasByPeriod.toFixed(2) : 0
     return {
       props: {
         user: session.user,
