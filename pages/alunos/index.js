@@ -3,6 +3,7 @@ import auth0 from '../../lib/auth0'
 import dayjs from 'dayjs'
 import Link from 'next/link'
 import Image from 'next/image'
+import { fetcher, useQuery } from '../../lib/graphql'
 
 const Alunos = (props) => {
   if (!props.errors) {
@@ -60,26 +61,38 @@ export default Alunos
 export async function getServerSideProps({ req, res }) {
   const session = await auth0.getSession(req)
   if (session) {
-    const data = await fetch('https://mamanagerapi.herokuapp.com/graphql', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Accept: 'application/json',
-        Authorization:
-          `${process.env.BEARER}`,
-      },
-      body: JSON.stringify({
-        query: `{ 
-          findAllAlunos(user: "${session.user.email}") {
-            id
-            aluno
-            birthDate
-            dueDate
-            gender
-            location
-        } }`,
-      }),
-    })
+    const data = await useQuery(`{
+        findAllAlunos(user: "${session.user.email}") {
+          id
+          aluno
+          birthDate
+          dueDate
+          gender
+          location
+        } 
+      }`
+    )
+    console.log(data)
+    // const data = await fetch('https://mamanagerapi.herokuapp.com/graphql', {
+    //   method: 'POST',
+    //   headers: {
+    //     'Content-Type': 'application/json',
+    //     Accept: 'application/json',
+    //     Authorization:
+    //       `${process.env.BEARER}`,
+    //   },
+    //   body: JSON.stringify({
+    //     query: `{ 
+    //       findAllAlunos(user: "${session.user.email}") {
+    //         id
+    //         aluno
+    //         birthDate
+    //         dueDate
+    //         gender
+    //         location
+    //     } }`,
+    //   }),
+    // })
     const alunosDB = await data.json()
     const alunos = alunosDB.data
     let errors = null

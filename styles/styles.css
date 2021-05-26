@@ -1,3 +1,6 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 @import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;1,400&display=swap');
 
 html {
@@ -8,7 +11,7 @@ html {
 body {
   margin: 0 0 0;
   height: 87vh;
-  background-color: #fafafa;
+  background-color: #fcebeb;
 }
 
 a:link {
@@ -45,36 +48,8 @@ a:hover {
   font-weight: 300;
 }
 
-.sidebar-image {
-  background-image: url(../public/img/sidebar-background.png);
-  float: left;
-  width: 160px;
-  background-color: #791111;
-  overflow: auto;
-  height: 86.5vh;
-  margin-bottom: auto;
-}
-
-.sidebar {
-  padding-left: 24px;
-  padding-right: 12px;
-  padding-top: 18px;
-  padding-bottom: 18px;
-  text-align: left;
-  color: white;
-  font-size: 16px;
-  font-weight: 300;
-  border-bottom: 1px solid gray;
-}
-
 .ultimoitem {
   margin-bottom: 100px;
-}
-
-.sidebar:hover {
-  background-color: rgba(0, 0, 0, 0.452);
-  color: white;
-  transition: 0.3s;
 }
 
 .profile {
@@ -96,8 +71,8 @@ a:hover {
 .principal {
   overflow: auto;
   position: relative;
-  max-width: 84vw;
-  height: 86.5vh;
+  width: 76vw;
+  height: 85vh;
   margin-left: auto;
   scrollbar-width: thin;
   scrollbar-color: gray gray;
@@ -168,4 +143,120 @@ a:hover {
 
 .table-hover:hover {
   background-color: #cfd9fc;
+}
+
+.background {
+  display: block;
+  width: 50vh;
+  height: 50vh;
+  margin: 10vh auto 2vh auto;
+}
+
+.loginpage {
+  display: block;
+  height: 50%;
+  width: 50vh;
+  margin: 0 auto 10vh auto;
+  text-align: center;
+  color: white;
+}
+
+.msg-login {
+  background-color: rgb(255, 55, 55);
+  padding: 2vh;
+  text-align: center;
+  color: white;
+  font-weight: 500;
+  font-size: 20px;
+  border: rgb(156, 69, 69);
+  border-top-width: 4px;
+  border-bottom-width: 4px;
+  border-right-width: 0;
+  border-left-width: 0;
+  border-style: solid;
+}
+
+.button-login {
+  display: block;
+  background-color: rgb(0, 13, 71);
+  padding: 2vh;
+  height: 4vh;
+  margin-top: 2vh;
+  text-align: center;
+  color: white;
+  font-weight: 500;
+  font-size: 20px;
+}
+
+.button-login:hover {
+  font-size: 24px;
+}
+
+.index {
+  margin-top: 4vh;
+}
+
+.res-tittle {
+  font-size: 24px;
+}
+
+.valor {
+  font-size: 24px;
+  font-weight: bold;
+}
+
+.euro {
+  float: right;
+  font-size: 48px;
+}
+
+.res-card {
+  display: inline-block;
+  padding: 2vh;
+  border-radius: 15px;
+  width: 170px;
+  color: white;
+  margin: 1vh;
+}
+
+.dark-green {
+  background-color: green;
+}
+.green {
+  background-color: rgb(93, 207, 0);
+}
+.yellow {
+  background-color: rgb(170, 167, 0);
+}
+.red {
+  background-color: rgb(173, 54, 54);
+}
+.blue {
+  background-color: rgb(20, 52, 158);
+}
+.cardAluno {
+  display: block;
+  background-color: white;
+  padding: 6px;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1),
+    0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  margin-top: 2px;
+  margin-bottom: 6px;
+  width: auto;
+  max-width: 300px;
+  font-size: 14px;
+}
+
+.cardTittle {
+  display: inline-block;
+  font-size: 20px;
+  font-weight: bold;
+}
+
+.editIcon {
+  float: right;
+}
+
+.cardDescription {
+  margin-top: 1vh;
 }

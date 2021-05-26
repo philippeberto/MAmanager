@@ -1,99 +1,117 @@
-import dayjs from 'dayjs'
 import React from 'react'
-import auth0 from '../lib/auth0'
+import { useUser } from '@auth0/nextjs-auth0'
+import Image from 'next/image'
+import Link from 'next/link'
+import { useQuery } from '../lib/graphql'
+import dayjs from 'dayjs'
+import CardStat from '../Components/CardStat'
+import { MdPeople, MdEuroSymbol } from 'react-icons/md'
 
-const Index = (props) => {
-  const saldo = parseFloat(props.mensalidades) + parseFloat(props.vendas) - parseFloat(props.compras) - parseFloat(props.despesas)
-  console.log(saldo)
-  return (
-    <div className='index'>
-      <div className='res-card dark-green'>
-        <div className='res-tittle'>Mensalidades</div>
-        <div className='euro'>€</div>
-        <p className='valor'>{props.mensalidades}</p>
-      </div>
-      <div className='res-card green'>
-        <div className='res-tittle'>Vendas</div>
-        <div className='euro'>€</div>
-        <p className='valor'>{props.vendas}</p>
-      </div>
-      <div className='res-card yellow'>
-        <div className='res-tittle'>Compras</div>
-        <div className='euro'>€</div>
-        <p className='valor'>{props.compras}</p>
-      </div>
-      <div className='res-card red'>
-        <div className='res-tittle'>Despesas</div>
-        <div className='euro'>€</div>
-        <p className='valor'>{props.despesas}</p>
-      </div>
-      <div className='res-card blue'>
-        <div className='res-tittle'>Saldo</div>
-        <div className='euro'>€</div>
-        <p className='valor'>{saldo.toFixed(2)}</p>
-      </div>
-    </div>
-  )
-}
 
-export default Index
-
-export async function getServerSideProps({ req, res }) {
+const Index = () => {
+  const { user, error, isLoading } = useUser()
   const date = new Date()
   const firstDay = new Date(date.getFullYear(), date.getMonth(), 1)
   const lastDay = new Date(date.getFullYear(), date.getMonth() + 1, 0)
-  const session = await auth0.getSession(req)
-  if (session) {
-    const data = await fetch('https://mamanagerapi.herokuapp.com/graphql', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Accept: 'application/json',
-        Authorization:
-          `${process.env.BEARER}`,
-      },
-      body: JSON.stringify({
-        query: `{
-        somaMensalidadesByPeriod(user:"${session.user.email}",input:{
-          idate: "${dayjs(firstDay).format('YYYY-MM-DD')}"
-          fdate: "${dayjs(lastDay).format('YYYY-MM-DD')}"
-        })
-        somaDespesasByPeriod(user:"${session.user.email}",input:{
-          idate: "${dayjs(firstDay).format('YYYY-MM-DD')}"
-          fdate: "${dayjs(lastDay).format('YYYY-MM-DD')}"
-        })
-        somaVendasByPeriod(user:"${session.user.email}",input:{
-          idate: "${dayjs(firstDay).format('YYYY-MM-DD')}"
-          fdate: "${dayjs(lastDay).format('YYYY-MM-DD')}"
-        })
-        somaComprasByPeriod(user:"${session.user.email}",input:{
-          idate: "${dayjs(firstDay).format('YYYY-MM-DD')}"
-          fdate: "${dayjs(lastDay).format('YYYY-MM-DD')}"
-        })
-      }`,
-      }),
-    })
-    const mensalidadesDB = await data.json()
+  if (!user) return (
+    <div >
+      <div className='background'>
+        <Image src='/img/GBCampolide_logo.png' width={400} height={400} />
+      </div>
+      <div className='loginpage'>
+        <div className='msg-login'>Necessitas de Autenticação</div>
+        <Link href="/api/auth/login">
+          <a className="button-login">Entrar</a>
+        </Link>
+      </div>
+    </div>
+  )
 
-    const mensalidades = mensalidadesDB.data.somaMensalidadesByPeriod ? mensalidadesDB.data.somaMensalidadesByPeriod.toFixed(2) : 0
-    const despesas = mensalidadesDB.data.somaDespesasByPeriod ? mensalidadesDB.data.somaDespesasByPeriod.toFixed(2) : 0
-    const vendas = mensalidadesDB.data.somaVendasByPeriod ? mensalidadesDB.data.somaVendasByPeriod.toFixed(2) : 0
-    const compras = mensalidadesDB.data.somaComprasByPeriod ? mensalidadesDB.data.somaComprasByPeriod.toFixed(2) : 0
-    return {
-      props: {
-        user: session.user,
-        mensalidades,
-        despesas,
-        vendas,
-        compras
-      }
+  if (isLoading) return <div>Loading...</div>
+  if (error) return <div>{error.message}</div>
+
+  if (user) {
+    const { data: somaMensalidades } = useQuery(`
+    {
+      somaMensalidadesByPeriod(user:"${user}",input:{
+        idate: "${dayjs(firstDay).format('YYYY-MM-DD')}"
+        fdate: "${dayjs(lastDay).format('YYYY-MM-DD')}"
+      })
     }
-  }
-  return {
-    props: {
-      user: 'Usuário não logado',
-      data: 'Dados Inacessíveis'
+    `)
+    const { data: somaDespesas } = useQuery(`
+    {
+      somaDespesasByPeriod(user:"${user}",input:{
+        idate: "${dayjs(firstDay).format('YYYY-MM-DD')}"
+        fdate: "${dayjs(lastDay).format('YYYY-MM-DD')}"
+      })
     }
+    `)
+    const { data: somaVendas } = useQuery(`
+    {
+      somaVendasByPeriod(user:"${user}",input:{
+        idate: "${dayjs(firstDay).format('YYYY-MM-DD')}"
+        fdate: "${dayjs(lastDay).format('YYYY-MM-DD')}"
+      })
+    }
+    `)
+    const { data: somaCompras } = useQuery(`
+    {
+      somaComprasByPeriod(user:"${user}",input:{
+        idate: "${dayjs(firstDay).format('YYYY-MM-DD')}"
+        fdate: "${dayjs(lastDay).format('YYYY-MM-DD')}"
+      })
+    }
+    `)
+    let saldo = 0
+    if (somaDespesas && somaMensalidades && somaVendas && somaCompras)
+      saldo = parseFloat(somaMensalidades.somaMensalidadesByPeriod) + parseFloat(somaVendas.somaVendasByPeriod) - parseFloat(somaCompras.somaComprasByPeriod) - parseFloat(somaDespesas.somaDespesasByPeriod)
+
+    return (
+      <div>
+        <pre>{JSON.stringify(user)}</pre>
+        {somaDespesas && somaMensalidades && somaVendas && somaCompras && (
+          <>
+            <CardStat>
+              <CardStat.Icon>
+                <MdPeople className="h-8 w-8 text-white" />
+              </CardStat.Icon>
+              <CardStat.Data>
+                <CardStat.Title>{somaMensalidades.somaMensalidadesByPeriod}</CardStat.Title>
+                <CardStat.Description>em vendas</CardStat.Description>
+              </CardStat.Data>
+              <MdEuroSymbol className="h-8 w-8 text-red-900" />
+            </CardStat>
+            <div className='res-card dark-green'>
+              <div className='res-tittle'>Mensalidades</div>
+              <div className='euro'>€</div>
+              <p className='valor'>{somaMensalidades.somaMensalidadesByPeriod}</p>
+            </div>
+            <div className='res-card green'>
+              <div className='res-tittle'>Vendas</div>
+              <div className='euro'>€</div>
+              <p className='valor'>{somaVendas.somaVendasByPeriod}</p>
+            </div>
+            <div className='res-card yellow'>
+              <div className='res-tittle'>Compras</div>
+              <div className='euro'>€</div>
+              <p className='valor'>{somaCompras.somaComprasByPeriod}</p>
+            </div>
+            <div className='res-card red'>
+              <div className='res-tittle'>Despesas</div>
+              <div className='euro'>€</div>
+              <p className='valor'>{somaDespesas.somaDespesasByPeriod}</p>
+            </div>
+            <div className='res-card blue'>
+              <div className='res-tittle'>Saldo</div>
+              <div className='euro'>€</div>
+              <p className='valor'>{saldo}</p>
+            </div>
+          </>
+        )}
+      </div>
+    )
   }
 }
 
+export default Index

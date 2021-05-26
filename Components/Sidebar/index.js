@@ -1,57 +1,37 @@
-import React from 'react'
+import React, { useState } from 'react'
+import Menu from './menu'
+import { MdHome, MdLabel } from 'react-icons/md'
+import { FaBoxOpen, FaRegBuilding } from 'react-icons/fa'
 import Link from 'next/link'
 
 const Sidebar = (props) => {
+  const [sidebarOpen, setSideBarOpen] = useState(false)
+  const open = () => {
+    setSideBarOpen(true)
+  }
   return (
-    <aside className="sidebar-image">
-      <Link href="/usuario">
-        <a>
-          <div className="sidebar">Usuário</div>
+    <div className="fixed z-30 inset-y-0 left-0 w-64 transition duration-300 transform bg-red-900 overflow-y-auto translate-x-0 ease-out mt-16">
+      <Menu.Brand>
+        <Link href="/">
+          <a>
+            MA manager
         </a>
-      </Link>
+        </Link>
 
-      <Link href="/">
-        <a>
-          <div className="sidebar">Dashboard</div>
-        </a>
-      </Link>
+      </Menu.Brand>
 
-      <Link href="/alunos">
-        <a>
-          <div className="sidebar">Alunos</div>
-        </a>
-      </Link>
+      <Menu.Nav>
+        <Menu.Item href='/usuario' Icon={MdHome}>Usuário</Menu.Item>
+        <Menu.Item href='/' Icon={FaBoxOpen}>Dashboard</Menu.Item>
+        <Menu.Item href='/alunos' Icon={MdLabel}>Alunos</Menu.Item>
+        <Menu.Item href='/mensalidades' Icon={FaRegBuilding}>Mensalidades</Menu.Item>
+        <Menu.Item href='/vendas' Icon={MdHome}>Vendas</Menu.Item>
+        <Menu.Item href='/compras' Icon={FaBoxOpen}>Compras</Menu.Item>
+        <Menu.Item href='/despesas' Icon={MdLabel}>Despesas</Menu.Item>
+        <Menu.Item href='/seguros' Icon={FaRegBuilding}>Seguros</Menu.Item>
+      </Menu.Nav>
+    </div>
 
-      <Link href="/mensalidades">
-        <a>
-          <div className="sidebar">Mensalidades</div>
-        </a>
-      </Link>
-
-      <Link href="/vendas">
-        <a>
-          <div className="sidebar">Vendas</div>
-        </a>
-      </Link>
-
-      <Link href="/compras">
-        <a>
-          <div className="sidebar">Compras</div>
-        </a>
-      </Link>
-
-      <Link href="/despesas">
-        <a>
-          <div className="sidebar">Despesas</div>
-        </a>
-      </Link>
-
-      <Link href="/seguros">
-        <a>
-          <div className="sidebar">Seguros</div>
-        </a>
-      </Link>
-    </aside>
   )
 }
 
