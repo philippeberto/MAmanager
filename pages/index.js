@@ -7,6 +7,7 @@ import dayjs from 'dayjs'
 import CardStat from '../Components/CardStat'
 import { MdPeople, MdEuroSymbol } from 'react-icons/md'
 import Layout from '../Components/Layout/index'
+import { FaBalanceScale, FaBoxOpen, FaCashRegister, FaDollarSign, FaRegCalendar, FaWallet } from 'react-icons/fa'
 
 const Index = () => {
   const { user, error, isLoading } = useUser()
@@ -73,7 +74,8 @@ const Index = () => {
           <>
             <CardStat>
               <CardStat.Icon>
-                <MdPeople className="h-8 w-8 text-white" />
+                <FaRegCalendar className="h-8 w-8 text-white" />
+                <FaDollarSign className='fixed ml-2 -mt-5 text-white text-md' />
               </CardStat.Icon>
               <CardStat.Data>
                 <CardStat.Title>{somaMensalidades.somaMensalidadesByPeriod}</CardStat.Title>
@@ -82,7 +84,7 @@ const Index = () => {
             </CardStat>
             <CardStat>
               <CardStat.Icon>
-                <MdPeople className="h-8 w-8 text-white" />
+                <FaCashRegister className="h-8 w-8 text-white" />
               </CardStat.Icon>
               <CardStat.Data>
                 <CardStat.Title>{somaVendas.somaVendasByPeriod}</CardStat.Title>
@@ -91,7 +93,7 @@ const Index = () => {
             </CardStat>
             <CardStat>
               <CardStat.Icon>
-                <MdPeople className="h-8 w-8 text-white" />
+                <FaBoxOpen className="h-8 w-8 text-white" />
               </CardStat.Icon>
               <CardStat.Data>
                 <CardStat.Title>{somaCompras.somaComprasByPeriod}</CardStat.Title>
@@ -100,7 +102,7 @@ const Index = () => {
             </CardStat>
             <CardStat>
               <CardStat.Icon>
-                <MdPeople className="h-8 w-8 text-white" />
+                <FaWallet className="h-8 w-8 text-white" />
               </CardStat.Icon>
               <CardStat.Data>
                 <CardStat.Title>{somaDespesas.somaDespesasByPeriod}</CardStat.Title>
@@ -109,11 +111,11 @@ const Index = () => {
             </CardStat>
             <CardStat>
               <CardStat.Icon>
-                <MdPeople className="h-8 w-8 text-white" />
+                <FaBalanceScale className="h-8 w-8 text-white" />
               </CardStat.Icon>
               <CardStat.Data>
                 <CardStat.Title>{saldo}</CardStat.Title>
-                <CardStat.Description>saldo total</CardStat.Description>
+                <CardStat.Description>saldo</CardStat.Description>
               </CardStat.Data>
             </CardStat>
           </>

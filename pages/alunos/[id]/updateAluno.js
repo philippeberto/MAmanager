@@ -1,8 +1,42 @@
 import React from "react"
 import { useFormik } from "formik"
 import * as Yup from "yup"
-import auth0 from "../../../lib/auth0"
 import dayjs from "dayjs"
+
+const FIND_ALUNO = {
+  query: `{ 
+    findAluno (user: "${session.user.email}", id:"${req.url.split('/')[2]}") {
+      id
+      aluno
+      phone
+      birthDate
+      parent
+      parentPhone
+      address
+      location
+      dueDate
+      gender
+  } }`,
+}
+
+const UPDATE_ALUNO = {
+  query: `mutation{
+  updateAluno(user: "${user}", id:"${id}", input:{
+    aluno: "${aluno.nome}"
+    phone: "${aluno.telemovel}", 
+    birthDate: "${aluno.ndata}", 
+    parent: "${aluno.responsavel}", 
+    parentPhone: "${aluno.tresponsavel}", 
+    address: "${aluno.endereco}", 
+    location: "${aluno.localidade}", 
+    dueDate: "${aluno.vdata}", 
+    gender: "${aluno.sexo}"
+  }){
+    id
+    aluno
+  }
+}`
+}
 
 const EditarAluno = (props) => {
   const { handleSubmit, handleChange, values, touched, errors } = useFormik({
@@ -238,39 +272,4 @@ export async function getServerSideProps({ req, res }) {
 
 export default EditarAluno
 
-const salvarAluno = async (user, aluno, id) => {
-  console.log(id, user)
-  try {
-    const data = await fetch("https://mamanagerapi.herokuapp.com/graphql", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Accept: "application/json",
-        Authorization:
-          "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjbGllbnQiOiJmcm9udC1lbmQtS2U0Z3JnNzRocjRkY2I2IiwiaWF0IjoxNTk3ODU3NTg2fQ.MVQIQxXkVgbhCFzYRwIiAtJZHbYN0UqiJGBndMLKAGY",
-      },
-      body: JSON.stringify({
-        query: `mutation{
-        updateAluno(user: "${user}", id:"${id}", input:{
-          aluno: "${aluno.nome}"
-          phone: "${aluno.telemovel}", 
-          birthDate: "${aluno.ndata}", 
-          parent: "${aluno.responsavel}", 
-          parentPhone: "${aluno.tresponsavel}", 
-          address: "${aluno.endereco}", 
-          location: "${aluno.localidade}", 
-          dueDate: "${aluno.vdata}", 
-          gender: "${aluno.sexo}"
-        }){
-          id
-          aluno
-        }
-      }`
-      })
-    })
-    const alunoDB = await data.json()
-    const alun = alunoDB.data
-    console.log(alun)
-  } catch (err) { console.log(err) }
-}
 

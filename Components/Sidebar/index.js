@@ -10,7 +10,7 @@ const Sidebar = (props) => {
     setSideBarOpen(true)
   }
   return (
-    <div className="fixed z-30 inset-y-0 left-0 w-50 transition duration-300 transform bg-red-900 overflow-y-auto translate-x-0 ease-out mt-12">
+    <div className="fixed z-30 inset-y-0 left-0 w-50 transition duration-300 transform bg-blueTheme overflow-y-auto translate-x-0 ease-out mt-12">
       <Menu.Brand>
         <Link href="/">
           <a>

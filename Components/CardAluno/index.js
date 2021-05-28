@@ -93,7 +93,7 @@ const CardAluno = ({
         }
         {belt === 2 &&
           <>
-            <div className='absolute inset-y-0 left purple w-2 h-full'></div>
+            <div className='absolute inset-y-0 left bg-purple w-2 h-full'></div>
             <div className='absolute inset-y-24 left bg-black w-2 h-12'></div>
             {degrees && degrees.forEach(degree => {
               <div className={degree}></div>
@@ -103,7 +103,7 @@ const CardAluno = ({
         }
         {belt === 3 &&
           <>
-            <div className='absolute inset-y-0 left brown w-2 h-full'></div>
+            <div className='absolute inset-y-0 left bg-brown w-2 h-full'></div>
             <div className='absolute inset-y-24 left bg-black w-2 h-12'></div>
             {degrees.map(degree => {
               return (<div className={degree}></div>)
