@@ -20,13 +20,8 @@ const Header = () => {
     setSideBarOpen(true)
   }
   return (
-    <header className="flex justify-between items-center py-4 px-6 bg-white border-b-4 border-indigo-600">
-      {user && (
-        <div className='float-right'>
-          {user.name}
+    <header className="flex justify-between items-center py-2 px-6 bg-white border-b-4 border-red-900">
 
-        </div>
-      )}
       <div className="flex items-center">
         <button onClick={open} className="text-gray-500 focus:outline-none lg:hidden">
           <svg className="h-6 w-6" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -36,6 +31,12 @@ const Header = () => {
         </button>
 
       </div>
+      {user && (
+        <div className='float-right'>
+          {user.name}
+
+        </div>
+      )}
 
       <div className="flex items-center">
         <div className="relative">

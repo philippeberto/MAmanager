@@ -1,7 +1,11 @@
+import { MdEuroSymbol } from 'react-icons/md'
+
 const CardStat = ({ children }) => {
   return (
-    <div className="flex items-center px-5 py-6 shadow-sm rounded-md bg-white">
-      {children}
+    <div className="inline-block w-full my-6 px-6 sm:w-1/2 lg:w-1/3 sm:mt-0">
+      <div className="flex items-center px-5 py-6 shadow-sm rounded-md bg-white">
+        {children}
+      </div>
     </div>
   )
 }
@@ -23,8 +27,10 @@ const CardStatData = ({ children }) => {
 
 const CardStatTitle = ({ children }) => {
   return (
-    <h4 className="text-2xl font-semibold text-gray-700">{children}</h4>
-
+    <div className='w-full'>
+      <h4 className="text-2xl font-semibold text-gray-700 inline-block">{children}</h4>
+      <MdEuroSymbol className="h-8 w-8 text-red-900 inline-block ml-8 -mt-3" />
+    </div>
   )
 }
 

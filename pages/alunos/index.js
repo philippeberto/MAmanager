@@ -1,117 +1,81 @@
 import React from 'react'
-import auth0 from '../../lib/auth0'
-import dayjs from 'dayjs'
-import Link from 'next/link'
-import Image from 'next/image'
-import { fetcher, useQuery } from '../../lib/graphql'
+import { useMutation, useQuery } from '../../lib/graphql'
+import { useUser } from '@auth0/nextjs-auth0'
+import CardAluno from '../../Components/CardAluno'
+import Title from '../../Components/Title/index'
+import Button from '../../Components/Button/index'
+import Layout from '../../Components/Layout'
 
-const Alunos = (props) => {
-  if (!props.errors) {
+const REMOVE_ALUNO = `
+mutation removeAluno ($user: String!, $id: String!) {
+  removeAluno (
+    user: $user
+    id: $id
+    ) 
+}
+`
+
+const Alunos = () => {
+  const { user, error, isLoading } = useUser()
+  const [deleteData, deleteProduct] = useMutation(REMOVE_ALUNO)
+
+  const { data: alunos, mutate } = useQuery(`{
+    findAllAlunos(user: "philippe.bjj@gmail.com") {
+      id
+      aluno
+      birthDate
+      belt
+      degree
+      imageUrl
+    } 
+  }`
+  )
+
+  if (user) {
+
+
+    const remove = (user, id) => async () => {
+      await deleteProduct({ user, id })
+      mutate()
+    }
+
     return (
-      <div>
-        <h2>Alunos Matriculados</h2>
-        <a href="/alunos/addAluno">Novo Aluno</a>
-        <input type="text"></input>
-        <button type="submit">ok</button>
-        <div className="colum3">
-          {props.data.findAllAlunos.map((aluno) => {
-            return (
-              <div key={aluno.id}>
-                <div className="cardAluno">
-                  <div className='cardTittle'>{aluno.aluno}</div>
-                  <Link href={`/alunos/${aluno.id}/updateAluno`}>
-                    <a className='editIcon'>
-                      <Image
-                        src="/img/icon-edit.png"
-                        width='20'
-                        height='20'
-                        alt="edit icon"
-                      />
-                    </a>
-                  </Link><br />
-                  ({aluno.id})
-                  <br />
-                  <div className='cardDescription'>
-                    Idade: {dayjs().diff(dayjs(aluno.birthDate), 'year')} anos
-                    <br />
-                    Vencimento: dia {aluno.dueDate}
-                    <br />
-                    Faixa: {aluno.degree}
-                    <br />
-                  </div>
-                </div>
-              </div>
-            )
-          })}
+      <Layout>
+        <div>
+          <Title>Alunos Matriculados</Title>
+          <div className='my-4'>
+            <Button.Link href='./alunos/addAluno'>Novo Aluno</Button.Link>
+          </div>
+          <input type="text"></input>
+
         </div>
-      </div >
+
+        {alunos && alunos.findAllAlunos && alunos.findAllAlunos.length > 0 && alunos.findAllAlunos.map((aluno) => {
+          return (
+            <CardAluno
+              key={aluno.id}
+              user={user.email}
+              id={aluno.id}
+              name={aluno.aluno}
+              birthDate={aluno.birthDate}
+              belt={aluno.belt}
+              degree={aluno.degree}
+              remove={remove}
+              url={aluno.url} />
+          )
+        })}
+      </Layout>
     )
+
   }
   return (
-    <div>
-      {props.errors.map(erro => {
-        return <p>{JSON.stringify(erro.message, null, 2)}</p>
-      })}
-    </div>
+    <Layout>
+      {error && (
+        <pre>{JSON.stringify(error, null, 2)}</pre>
+      )}
+    </Layout>
   )
 }
 
 export default Alunos
 
-export async function getServerSideProps({ req, res }) {
-  const session = await auth0.getSession(req)
-  if (session) {
-    const data = await useQuery(`{
-        findAllAlunos(user: "${session.user.email}") {
-          id
-          aluno
-          birthDate
-          dueDate
-          gender
-          location
-        } 
-      }`
-    )
-    console.log(data)
-    // const data = await fetch('https://mamanagerapi.herokuapp.com/graphql', {
-    //   method: 'POST',
-    //   headers: {
-    //     'Content-Type': 'application/json',
-    //     Accept: 'application/json',
-    //     Authorization:
-    //       `${process.env.BEARER}`,
-    //   },
-    //   body: JSON.stringify({
-    //     query: `{ 
-    //       findAllAlunos(user: "${session.user.email}") {
-    //         id
-    //         aluno
-    //         birthDate
-    //         dueDate
-    //         gender
-    //         location
-    //     } }`,
-    //   }),
-    // })
-    const alunosDB = await data.json()
-    const alunos = alunosDB.data
-    let errors = null
-    if (alunosDB.errors) {
-      errors = alunosDB.errors
-    }
-
-    return {
-      props: {
-        errors,
-        user: session.user,
-        data: alunos,
-      },
-    }
-  }
-  return {
-    props: {
-      user: 'Usuário não logado',
-      data: 'Dados inacessíveis'
-    }
-  }
-}

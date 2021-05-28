@@ -6,7 +6,7 @@ import { useQuery } from '../lib/graphql'
 import dayjs from 'dayjs'
 import CardStat from '../Components/CardStat'
 import { MdPeople, MdEuroSymbol } from 'react-icons/md'
-
+import Layout from '../Components/Layout/index'
 
 const Index = () => {
   const { user, error, isLoading } = useUser()
@@ -68,8 +68,7 @@ const Index = () => {
       saldo = parseFloat(somaMensalidades.somaMensalidadesByPeriod) + parseFloat(somaVendas.somaVendasByPeriod) - parseFloat(somaCompras.somaComprasByPeriod) - parseFloat(somaDespesas.somaDespesasByPeriod)
 
     return (
-      <div>
-        <pre>{JSON.stringify(user)}</pre>
+      <Layout>
         {somaDespesas && somaMensalidades && somaVendas && somaCompras && (
           <>
             <CardStat>
@@ -78,38 +77,48 @@ const Index = () => {
               </CardStat.Icon>
               <CardStat.Data>
                 <CardStat.Title>{somaMensalidades.somaMensalidadesByPeriod}</CardStat.Title>
-                <CardStat.Description>em vendas</CardStat.Description>
+                <CardStat.Description>mensalidades</CardStat.Description>
               </CardStat.Data>
-              <MdEuroSymbol className="h-8 w-8 text-red-900" />
             </CardStat>
-            <div className='res-card dark-green'>
-              <div className='res-tittle'>Mensalidades</div>
-              <div className='euro'>€</div>
-              <p className='valor'>{somaMensalidades.somaMensalidadesByPeriod}</p>
-            </div>
-            <div className='res-card green'>
-              <div className='res-tittle'>Vendas</div>
-              <div className='euro'>€</div>
-              <p className='valor'>{somaVendas.somaVendasByPeriod}</p>
-            </div>
-            <div className='res-card yellow'>
-              <div className='res-tittle'>Compras</div>
-              <div className='euro'>€</div>
-              <p className='valor'>{somaCompras.somaComprasByPeriod}</p>
-            </div>
-            <div className='res-card red'>
-              <div className='res-tittle'>Despesas</div>
-              <div className='euro'>€</div>
-              <p className='valor'>{somaDespesas.somaDespesasByPeriod}</p>
-            </div>
-            <div className='res-card blue'>
-              <div className='res-tittle'>Saldo</div>
-              <div className='euro'>€</div>
-              <p className='valor'>{saldo}</p>
-            </div>
+            <CardStat>
+              <CardStat.Icon>
+                <MdPeople className="h-8 w-8 text-white" />
+              </CardStat.Icon>
+              <CardStat.Data>
+                <CardStat.Title>{somaVendas.somaVendasByPeriod}</CardStat.Title>
+                <CardStat.Description>vendas</CardStat.Description>
+              </CardStat.Data>
+            </CardStat>
+            <CardStat>
+              <CardStat.Icon>
+                <MdPeople className="h-8 w-8 text-white" />
+              </CardStat.Icon>
+              <CardStat.Data>
+                <CardStat.Title>{somaCompras.somaComprasByPeriod}</CardStat.Title>
+                <CardStat.Description>compras</CardStat.Description>
+              </CardStat.Data>
+            </CardStat>
+            <CardStat>
+              <CardStat.Icon>
+                <MdPeople className="h-8 w-8 text-white" />
+              </CardStat.Icon>
+              <CardStat.Data>
+                <CardStat.Title>{somaDespesas.somaDespesasByPeriod}</CardStat.Title>
+                <CardStat.Description>despesas</CardStat.Description>
+              </CardStat.Data>
+            </CardStat>
+            <CardStat>
+              <CardStat.Icon>
+                <MdPeople className="h-8 w-8 text-white" />
+              </CardStat.Icon>
+              <CardStat.Data>
+                <CardStat.Title>{saldo}</CardStat.Title>
+                <CardStat.Description>saldo total</CardStat.Description>
+              </CardStat.Data>
+            </CardStat>
           </>
         )}
-      </div>
+      </Layout>
     )
   }
 }
