@@ -1,31 +1,18 @@
 import React from 'react'
 import { useUser } from '@auth0/nextjs-auth0'
-import Image from 'next/image'
-import Link from 'next/link'
 import { useQuery } from '../lib/graphql'
 import dayjs from 'dayjs'
 import CardStat from '../Components/CardStat'
 import Layout from '../Components/Layout/index'
-import { FaBalanceScale, FaBoxOpen, FaCashRegister, FaDollarSign, FaRegCalendar, FaWallet } from 'react-icons/fa'
+import { FaBalanceScale, FaBoxOpen, FaCashRegister, FaDollarSign, FaQuestion, FaRegCalendar, FaSearch, FaWallet } from 'react-icons/fa'
+import Button from '../Components/Button'
+import Link from 'next/link'
 
 const Index = () => {
   const { user, error, isLoading } = useUser()
   const date = new Date()
   const firstDay = new Date(date.getFullYear(), date.getMonth(), 1)
   const lastDay = new Date(date.getFullYear(), date.getMonth() + 1, 0)
-  if (!user) return (
-    <div >
-      <div className='background'>
-        <Image src='/img/GBCampolide_logo.png' width={400} height={400} />
-      </div>
-      <div className='loginpage'>
-        <div className='msg-login'>Necessitas de Autenticação</div>
-        <Link href="/api/auth/login">
-          <a className="button-login">Entrar</a>
-        </Link>
-      </div>
-    </div>
-  )
 
   if (isLoading) return <div>Loading...</div>
   if (error) return <div>{error.message}</div>
@@ -122,6 +109,26 @@ const Index = () => {
       </Layout>
     )
   }
+  return (
+    <div className='h-screen bg-gradient-to-b from-blueTheme-dark to-blueTheme-light pt-8 lg:pt-48'>
+
+      <div className='w-full p-4 md:w-1/2 md:h-1/2 md:rounded-lg md:m-auto'>
+        <Link href="/sobre" >
+          <a className='float-right text-white text-sm'>
+            <FaQuestion />
+          </a>
+        </Link>
+        <div className='bg-white mt-6 p-4 md:rounded-lg md:shadow-lg'>
+          <div className='bg-red-200 border-l-4 border-red-500 text-red-700 text-center mt-2 p-4'>Necessitas de Autenticação</div>
+          <div className='w-16 mt-12 m-auto'>
+            <Button.Link href="/api/auth/login">
+              <a>Entrar</a>
+            </Button.Link>
+          </div>
+        </div>
+      </div>
+    </div>
+  )
 }
 
 export default Index

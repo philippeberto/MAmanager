@@ -1,11 +1,11 @@
-import React from 'react'
 import { UserProvider } from '@auth0/nextjs-auth0'
+import React from 'react'
 import '../styles/styles.css'
 
 const MyApp = ({ Component, pageProps }) => {
-  const { user } = pageProps
+
   return (
-    <UserProvider user={user} >
+    <UserProvider >
       <Component {...pageProps} />
     </UserProvider>
   )
