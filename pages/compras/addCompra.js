@@ -1,5 +1,4 @@
 import React from 'react'
-import auth0 from '../../lib/auth0'
 import { useFormik } from 'formik'
 import * as Yup from 'yup'
 

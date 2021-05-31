@@ -19,9 +19,4 @@ export default withPageAuthRequired(Usuario => {
       </div>
     </Layout>
   )
-  return (
-    <div>
-      Não há nenhuma sessão ativa.
-    </div>
-  )
 })

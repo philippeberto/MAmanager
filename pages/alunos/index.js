@@ -31,7 +31,6 @@ export default withPageAuthRequired(function Alunos() {
     } 
   }`
   )
-
   if (user) {
 
 
@@ -47,9 +46,13 @@ export default withPageAuthRequired(function Alunos() {
           <div className='my-4'>
             <Button.Link href='./alunos/addAluno'>Novo Aluno</Button.Link>
           </div>
-
         </div>
-
+        { alunos && !alunos.findAllAlunos &&
+          <p className="bg-red-200 border-l-4 border-red-500 text-red-700 p-2 mb-4 w-auto mt-8">
+            Ocorreu um erro na conexão com o banco de dados.
+            Por favor contacte o administrador do sistema.
+          </p>
+        }
         {alunos && alunos.findAllAlunos && alunos.findAllAlunos.length > 0 && alunos.findAllAlunos.map((aluno) => {
           return (
             <CardAluno

@@ -54,14 +54,15 @@ const Index = () => {
     if (somaDespesas && somaMensalidades && somaVendas && somaCompras)
       saldo = parseFloat(somaMensalidades.somaMensalidadesByPeriod) + parseFloat(somaVendas.somaVendasByPeriod) - parseFloat(somaCompras.somaComprasByPeriod) - parseFloat(somaDespesas.somaDespesasByPeriod)
 
+
     return (
       <Layout>
         {somaDespesas && somaMensalidades && somaVendas && somaCompras && (
-          <>
+          <div className='inline-block'>
             <CardStat>
               <CardStat.Icon>
-                <FaRegCalendar className="h-8 w-8 text-white" />
-                <FaDollarSign className='fixed ml-2 -mt-5 text-white text-md' />
+                <FaRegCalendar className="h-4 w-4 text-white" />
+                <FaDollarSign className='fixed -mt-3 text-white text-md' />
               </CardStat.Icon>
               <CardStat.Data>
                 <CardStat.Title>{somaMensalidades.somaMensalidadesByPeriod}</CardStat.Title>
@@ -70,7 +71,7 @@ const Index = () => {
             </CardStat>
             <CardStat>
               <CardStat.Icon>
-                <FaCashRegister className="h-8 w-8 text-white" />
+                <FaCashRegister className="h-4 w-4 text-white" />
               </CardStat.Icon>
               <CardStat.Data>
                 <CardStat.Title>{somaVendas.somaVendasByPeriod}</CardStat.Title>
@@ -79,7 +80,7 @@ const Index = () => {
             </CardStat>
             <CardStat>
               <CardStat.Icon>
-                <FaBoxOpen className="h-8 w-8 text-white" />
+                <FaBoxOpen className="h-4 w-4 text-white" />
               </CardStat.Icon>
               <CardStat.Data>
                 <CardStat.Title>{somaCompras.somaComprasByPeriod}</CardStat.Title>
@@ -88,7 +89,7 @@ const Index = () => {
             </CardStat>
             <CardStat>
               <CardStat.Icon>
-                <FaWallet className="h-8 w-8 text-white" />
+                <FaWallet className="h-4 w-4 text-white" />
               </CardStat.Icon>
               <CardStat.Data>
                 <CardStat.Title>{somaDespesas.somaDespesasByPeriod}</CardStat.Title>
@@ -97,14 +98,22 @@ const Index = () => {
             </CardStat>
             <CardStat>
               <CardStat.Icon>
-                <FaBalanceScale className="h-8 w-8 text-white" />
+                <FaBalanceScale className="h-4 w-4 text-white" />
               </CardStat.Icon>
               <CardStat.Data>
                 <CardStat.Title>{saldo}</CardStat.Title>
                 <CardStat.Description>saldo</CardStat.Description>
               </CardStat.Data>
             </CardStat>
-          </>
+            <div className=''>
+              {somaDespesas.somaDespesasByPeriod == null && somaMensalidades.somaMensalidadesByPeriod == null && somaVendas.somaVendasByPeriod == null && somaCompras.somaComprasByPeriod == null &&
+                <p className="bg-red-200 border-l-4 border-red-500 text-red-700 p-2 mb-4 w-auto mt-8">
+                  Ocorreu um erro na conexão com o banco de dados.
+                  Por favor contacte o administrador do sistema.
+              </p>
+              }
+            </div>
+          </div>
         )}
       </Layout>
     )

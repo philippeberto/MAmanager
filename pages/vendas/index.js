@@ -28,7 +28,12 @@ export default withPageAuthRequired(Vendas => {
       <div className='block my-4'>
         <Button.Link href='#'>Registrar Venda</Button.Link>
       </div>
-      {vendas && vendas.findAllVendas && <p>{vendas.findAllVendas.lengTh}</p>}
+      { vendas && !vendas.findAllVendas &&
+        <p className="bg-red-200 border-l-4 border-red-500 text-red-700 p-2 mb-4 w-auto mt-8">
+          Ocorreu um erro na conexão com o banco de dados.
+          Por favor contacte o administrador do sistema.
+          </p>
+      }
       <div>
         {vendas && vendas.findAllVendas &&
           <div className="inline-block flex flex-col mt-8">

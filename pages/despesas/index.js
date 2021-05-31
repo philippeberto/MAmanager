@@ -30,6 +30,12 @@ export default withPageAuthRequired(Despesas => {
           <Button.Link href='#'>Registrar Despesa</Button.Link>
         </div>
         <div>
+          {despesas && !despesas.findAllDespesas &&
+            <p className="bg-red-200 border-l-4 border-red-500 text-red-700 p-2 mb-4 w-auto mt-8">
+              Ocorreu um erro na conexão com o banco de dados.
+              Por favor contacte o administrador do sistema.
+          </p>
+          }
           {despesas && despesas.findAllDespesas &&
             <div className="inline-block flex flex-col mt-8">
               <div className="py-2 overflow-x-auto sm:-mx-6 sm:px-6 lg:pr-20">

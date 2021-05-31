@@ -78,46 +78,54 @@ export default withPageAuthRequired(Mensalidades => {
           </div> */}
         </div>
       </div>
-      <div className="inline-block flex flex-col mt-8">
-        <div className="py-2 overflow-x-auto sm:-mx-6 sm:px-6 lg:pr-20">
-          <div
-            className="align-middle inline-block min-w-full shadow overflow-hidden sm:rounded-lg border-b border-gray-200">
-            <Table>
-              <Table.Head>
-                <Table.Th>Name</Table.Th>
-                <Table.Th>Data</Table.Th>
-                <Table.Th>Valor</Table.Th>
-              </Table.Head>
-              <Table.Body>
-                {mensalidades && mensalidades.findAllMensalidades && mensalidades.findAllMensalidades.map(mensalidade => {
-                  return (
-                    <Table.Tr key={mensalidade.id}>
-                      <Table.Td className="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
-                        <div className="flex mensalidades-center">
-                          <div className="ml-4">
-                            <div className="text-sm leading-5 font-medium text-gray-900">Aluno.nome
+      {mensalidades && !mensalidades.findAllMensalidades &&
+        <p className="bg-red-200 border-l-4 border-red-500 text-red-700 p-2 mb-4 w-auto mt-8">
+          Ocorreu um erro na conexão com o banco de dados.
+          Por favor contacte o administrador do sistema.
+          </p>
+      }
+      {mensalidades && mensalidades.findAllMensalidades &&
+        <div className="inline-block flex flex-col mt-8">
+          <div className="py-2 overflow-x-auto sm:-mx-6 sm:px-6 lg:pr-20">
+            <div
+              className="align-middle inline-block min-w-full shadow overflow-hidden sm:rounded-lg border-b border-gray-200">
+              <Table>
+                <Table.Head>
+                  <Table.Th>Name</Table.Th>
+                  <Table.Th>Data</Table.Th>
+                  <Table.Th>Valor</Table.Th>
+                </Table.Head>
+                <Table.Body>
+                  {mensalidades.findAllMensalidades.map(mensalidade => {
+                    return (
+                      <Table.Tr key={mensalidade.id}>
+                        <Table.Td className="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
+                          <div className="flex mensalidades-center">
+                            <div className="ml-4">
+                              <div className="text-sm leading-5 font-medium text-gray-900">Aluno.nome
                               </div>
-                            <div className="text-sm leading-5 text-gray-500">{mensalidade.id}</div>
+                              <div className="text-sm leading-5 text-gray-500">{mensalidade.id}</div>
+                            </div>
                           </div>
-                        </div>
-                      </Table.Td>
-                      <Table.Td
-                        className="px-6 py-4 whitespace-no-wrap text-right border-b border-gray-200 text-sm leading-5 font-medium">
-                        <Link href={`/products/${mensalidade.id}/edit`}>
-                          <div className="">{dayjs(mensalidade.paymentDate).format('DD/MM/YYYY')}</div>
-                        </Link>
-                      </Table.Td>
-                      <Table.Td
-                        className="px-6 py-4 whitespace-no-wrap text-right border-b border-gray-200 text-sm leading-5 font-medium">
-                        <div className="inline-flex ">{mensalidade.price}<MdEuroSymbol className='mt-1 ml-2' /></div>
-                      </Table.Td>
-                    </Table.Tr>)
-                })}
-              </Table.Body>
-            </Table>
+                        </Table.Td>
+                        <Table.Td
+                          className="px-6 py-4 whitespace-no-wrap text-right border-b border-gray-200 text-sm leading-5 font-medium">
+                          <Link href={`/products/${mensalidade.id}/edit`}>
+                            <div className="">{dayjs(mensalidade.paymentDate).format('DD/MM/YYYY')}</div>
+                          </Link>
+                        </Table.Td>
+                        <Table.Td
+                          className="px-6 py-4 whitespace-no-wrap text-right border-b border-gray-200 text-sm leading-5 font-medium">
+                          <div className="inline-flex ">{mensalidade.price}<MdEuroSymbol className='mt-1 ml-2' /></div>
+                        </Table.Td>
+                      </Table.Tr>)
+                  })}
+                </Table.Body>
+              </Table>
+            </div>
           </div>
         </div>
-      </div>
+      }
     </Layout>
   )
 })

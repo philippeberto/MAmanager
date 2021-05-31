@@ -29,11 +29,13 @@ const Sobre = () => {
     <div className='h-screen lg:pt-32 text-gray-200 bg-gradient-to-b from-blueTheme-dark to-blueTheme-light'>
       <div className='w-full md:w-1/2 lg:w-2/5 pt-8 px-8 md:m-auto'>
         <Link href='/'>
-          <FaWindowClose className='float-right' />
+          <a>
+            <FaWindowClose className='float-right' />
+          </a>
         </Link>
-        <p>Sobre</p>
+        <p className='text-3xl'>Sobre</p>
         <span className='text-gray-400 text-sm'>v0.2</span>
-        <div className='text-justify relative'>
+        <div className='text-justify relative mt-6'>
           Este projeto está a ser desenvolvido por <a href='https://github.com/philippeberto' className='text-blueTheme-xl' target="_blank">Philippe Berto </a>
         com o objetivo de criar uma aplicação completa para a gestão de uma academia de Jiu-Jitsu. Podes encontrar
         no GitHub os repositórios públicos dos sistemas <a href='https://github.com/philippeberto/MAmanager' className='text-blueTheme-xl' target="_blank">Front-end</a> e

@@ -29,15 +29,7 @@ const Header = () => {
               strokeLinejoin="round"></path>
           </svg>
         </button>
-
       </div>
-      {user && (
-        <div className='float-right'>
-          {user.name}
-
-        </div>
-      )}
-
       <div className="flex items-center">
         <div className="relative">
           <button onClick={() => setNotificationOpen(old => !old)}
@@ -49,12 +41,10 @@ const Header = () => {
               </path>
             </svg>
           </button>
-
           <div onClick={nclose}
             className={"fixed inset-0 h-full w-full z-10" + notificationOpen ? ' block ' : ''} ></div>
-
           {notificationOpen && <div className={"absolute right-0 mt-2 w-80 bg-white rounded-lg shadow-xl overflow-hidden z-10"}>
-            <a href="#"
+            {/* <a href="#"
               className="flex items-center px-4 py-3 text-gray-600 hover:text-white hover:bg-indigo-600 -mx-2">
               <img className="h-8 w-8 rounded-full object-cover mx-1"
                 src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&amp;ixid=eyJhcHBfaWQiOjEyMDd9&amp;auto=format&amp;fit=crop&amp;w=334&amp;q=80"
@@ -91,10 +81,9 @@ const Header = () => {
               <p className="text-sm mx-2">
                 <span className="font-bold" href="#">Abigail Bennett</span> start following you . 3h
                                 </p>
-            </a>
+            </a> */}
           </div>}
         </div>
-
         <div className="relative">
           <button onClick={() => setDropdownOpen(dropdownOpen => !dropdownOpen)}
             className="relative block h-8 w-8 rounded-full overflow-hidden shadow focus:outline-none">
@@ -110,15 +99,15 @@ const Header = () => {
 
           {dropdownOpen && <div x-show="dropdownOpen"
             className={
-              "absolute right-0 mt-2 w-48 bg-white rounded-md overflow-hidden shadow-xl z-10"
+              "absolute right-0 mt-2 bg-white rounded-md overflow-hidden shadow-xl z-10"
             }
           >
 
             <Link href="/usuario">
-              <a className="block px-4 py-2 text-sm text-gray-700 hover:bg-blueTheme-dark hover:text-white">Perfil</a>
+              <a className="block px-4 py-2 text-sm text-gray-700 hover:bg-blueTheme-light hover:text-white">{user.given_name}</a>
             </Link>
             <Link href="/api/auth/logout">
-              <a className="block px-4 py-2 text-sm text-gray-700 hover:bg-blueTheme-dark hover:text-white">Sair</a>
+              <a className="block px-4 py-2 text-sm text-gray-700 hover:bg-blueTheme-light hover:text-white">Sair</a>
             </Link>
 
           </div>}
