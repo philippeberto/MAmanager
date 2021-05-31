@@ -1,10 +1,29 @@
 import React from 'react'
-import auth0 from '../../lib/auth0'
 import dayjs from 'dayjs'
 import { useFormik } from 'formik'
 import * as Yup from 'yup'
+import { useUser, withPageAuthRequired } from '@auth0/nextjs-auth0'
+import { useQuery } from '../../lib/graphql'
+import Button from '../../Components/Button'
+import Layout from '../../Components/Layout'
+import Input from '../../Components/Input'
+import Title from '../../Components/Title'
+import Table from '../../Components/Table'
+import Link from 'next/link'
+import { FaSearch } from 'react-icons/fa'
+import { MdEuroSymbol } from 'react-icons/md'
 
-const Mensalidades = (props) => {
+export default withPageAuthRequired(Mensalidades => {
+  const { user, error, isLoading } = useUser()
+  const { data: mensalidades, mutate } = useQuery(`{
+      findAllMensalidades(user:"${user.email}"){
+        id
+        idAluno
+        paymentDate
+        price
+      }
+    }`)
+
   const { handleSubmit, handleChange, values, touched, errors } = useFormik({
     initialValues: {
       inicialDate: '',
@@ -15,147 +34,90 @@ const Mensalidades = (props) => {
       finalDate: Yup.date().required(''),
     }),
     onSubmit: (values) => {
-      buscarMensalidade(values, props.user.email, props.bearer)
-      alert(
-        `inicialDate: ${values.inicialDate},finalDate: ${values.finalDate}`,
-      )
+      buscarMensalidade(values, user.email)
     },
   })
-  if (!props.errors) {
-    return (
-      <div>
-        <h2>Mensalidades</h2>
-        <a href="/mensalidades/addMensalidade">Nova Mensalidade</a>
-        <h4>Período</h4>
-        <form onSubmit={handleSubmit}>
-          <div style={{ display: 'inline-block' }}>
-            <label htmlFor="inicialDate">Data Inicial</label><br />
-            <input
-              value={values.inicialDate}
-              onChange={handleChange}
-              type="date"
-              id="inicialDate"
-              name="inicialDate"
-              required
-            />
-            {touched.inicialDate && errors.inicialDate ?
-              <text>{errors.inicialDate}</text>
-              : null}
+  return (
+    <Layout>
+      <div className=''>
+        <div className='inline-block'>
+          <Title>Mensalidades</Title>
+          <div className='block my-4'>
+            <Button.Link href='#'>Nova Mensalidade</Button.Link>
           </div>
-          <div style={{ display: 'inline-block' }}>
-            <label htmlFor="finalDate">Data Final</label><br />
-            <input
-              value={values.finalDate}
-              onChange={handleChange}
-              type="date"
-              id="finalDate"
-              name="finalDate"
-              required
-            />
-            {touched.finalDate && errors.finalDate ?
-              <text>{errors.finalDate}</text>
-              : null}
-          </div>
-          <input type="submit" value="Buscar"></input>
-        </form>
-
-        <div className="colum3">
-          {props.data.map((mensalidade) => {
-            return (
-              <div key={mensalidade.id}>
-                <div className="cardAluno">
-                  <h3>{mensalidade.nomeAluno}</h3>
-                  Mês pago: {mensalidade.monthPaid}
-                  <br />
-                  Data do Pagamento: {dayjs(mensalidade.paymentDate).format('DD/MM/YYYY')}
-                  <br />
-                  Valor: {mensalidade.price}
-                  <br />
+        </div>
+        <div className="inline-block float-right lg:pr-16 lg:-mr-2 ">
+          {/* <div className="bg-white px-4 shadow overflow-hidden sm:rounded-lg border-b border-gray-200 text-sm">
+            <form onSubmit={handleSubmit}>
+              <div className='inline-flex'>
+                <Input
+                  value={values.inicialDate}
+                  onChange={handleChange}
+                  type="date"
+                  id="inicialDate"
+                  name="inicialDate"
+                  placeholder='Data Inicial'
+                  errors={errors.inicialDate}
+                />
+                <div className='ml-2'>
+                  <Input
+                    value={values.finalDate}
+                    onChange={handleChange}
+                    type="date"
+                    id="finalDate"
+                    name="finalDate"
+                    placeholder='Data Final'
+                    errors={errors.finalDate}
+                  />
+                </div>
+                <div className='mt-8 ml-4'>
+                  <Button type="submit"><FaSearch /></Button>
                 </div>
               </div>
-            )
-          })}
+            </form>
+          </div> */}
         </div>
       </div>
-    )
-  }
-  return (
-    <div>
-      {props.errors.map(erro => {
-        return <p>{JSON.stringify(erro.message, null, 2)}</p>
-      })}
-    </div>
+      <div className="inline-block flex flex-col mt-8">
+        <div className="py-2 overflow-x-auto sm:-mx-6 sm:px-6 lg:pr-20">
+          <div
+            className="align-middle inline-block min-w-full shadow overflow-hidden sm:rounded-lg border-b border-gray-200">
+            <Table>
+              <Table.Head>
+                <Table.Th>Name</Table.Th>
+                <Table.Th>Data</Table.Th>
+                <Table.Th>Valor</Table.Th>
+              </Table.Head>
+              <Table.Body>
+                {mensalidades && mensalidades.findAllMensalidades && mensalidades.findAllMensalidades.map(mensalidade => {
+                  return (
+                    <Table.Tr key={mensalidade.id}>
+                      <Table.Td className="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
+                        <div className="flex mensalidades-center">
+                          <div className="ml-4">
+                            <div className="text-sm leading-5 font-medium text-gray-900">Aluno.nome
+                              </div>
+                            <div className="text-sm leading-5 text-gray-500">{mensalidade.id}</div>
+                          </div>
+                        </div>
+                      </Table.Td>
+                      <Table.Td
+                        className="px-6 py-4 whitespace-no-wrap text-right border-b border-gray-200 text-sm leading-5 font-medium">
+                        <Link href={`/products/${mensalidade.id}/edit`}>
+                          <div className="">{dayjs(mensalidade.paymentDate).format('DD/MM/YYYY')}</div>
+                        </Link>
+                      </Table.Td>
+                      <Table.Td
+                        className="px-6 py-4 whitespace-no-wrap text-right border-b border-gray-200 text-sm leading-5 font-medium">
+                        <div className="inline-flex ">{mensalidade.price}<MdEuroSymbol className='mt-1 ml-2' /></div>
+                      </Table.Td>
+                    </Table.Tr>)
+                })}
+              </Table.Body>
+            </Table>
+          </div>
+        </div>
+      </div>
+    </Layout>
   )
-}
-
-export default Mensalidades
-
-export async function getServerSideProps({ req, res }) {
-  const session = await auth0.getSession(req)
-  if (session) {
-    const data = await fetch('https://mamanagerapi.herokuapp.com/graphql', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Accept: 'application/json',
-        Authorization:
-          `${process.env.BEARER}`,
-      },
-      body: JSON.stringify({
-        query: `{
-          findAllMensalidades(user:"${session.user.email}"){
-            id
-            idAluno
-            monthPaid
-            paymentDate
-            price
-          }
-        }`,
-      }),
-    })
-    const mensalidadesDB = await data.json()
-    for (const mensalidade of mensalidadesDB.data.findAllMensalidades) {
-      const data = await fetch('https://mamanagerapi.herokuapp.com/graphql', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Accept: 'application/json',
-          Authorization:
-            `${process.env.BEARER}`,
-        },
-        body: JSON.stringify({
-          query: `{
-            findAluno(user:"${session.user.email}", id:"${mensalidade.idAluno}"){
-              aluno
-            }
-          }`,
-        }),
-      })
-      const alunoDB = await data.json()
-      const aluno = alunoDB.data.findAluno.aluno
-      mensalidade.nomeAluno = aluno
-    }
-    console.log(mensalidadesDB.data.findAllMensalidades)
-    let errors = null
-    if (mensalidadesDB.errors) {
-      errors = mensalidadesDB.errors
-    }
-    return {
-      props: {
-        errors,
-        user: session.user,
-        data: mensalidadesDB.data.findAllMensalidades
-      },
-    }
-  }
-  return {
-    props: {
-      user: 'Usuário não logado',
-      data: 'Dados inacessíveis',
-    },
-  }
-}
-
-async function buscarMensalidade(values, user, bearer) {
-
-}
+})

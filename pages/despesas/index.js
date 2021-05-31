@@ -1,113 +1,78 @@
 import React from 'react'
-import auth0 from '../../lib/auth0'
 import Link from 'next/link'
 import dayjs from 'dayjs'
+import { useUser, withPageAuthRequired } from '@auth0/nextjs-auth0'
+import { useQuery } from '../../lib/graphql'
+import Layout from '../../Components/Layout'
+import Title from '../../Components/Title'
+import Table from '../../Components/Table'
+import Button from '../../Components/Button'
 
-const Despesas = (props) => {
+export default withPageAuthRequired(Despesas => {
+
+  const { user, error, isLoading } = useUser()
+  const { data: despesas, mutate } = useQuery(`{
+    findAllDespesas(user:"${user.email}"){
+      id
+      description
+      price
+      dueDate
+      paymentDate
+      referenceMonth
+    }
+  }`)
   let total = 0
-  if (!props.errors) {
-    const despesas = props.data.findAllDespesas
-    console.log(despesas)
-    return (
-      <div className="table-center">
-        <h2>Despesas</h2>
-        <Link href="/despesas/addDespesa">
-          <a>Registar Despesa</a>
-        </Link>
+  return (
+    <Layout>
+      <div>
+        <Title>Despesas</Title>
+        <div className='block my-4'>
+          <Button.Link href='#'>Registrar Despesa</Button.Link>
+        </div>
         <div>
-          <table className="table">
-            <thead>
-              <tr>
-                <td className="table-head">Descrição</td>
-                <td className="table-head">Data de Vencimento</td>
-                <td className="table-head">Data do pagamento</td>
-                <td className="table-head">Valor</td>
-                <td className="table-head">Status</td>
-              </tr>
-            </thead>
-            <tbody>
-              {props.data.findAllDespesas.map((despesa) => {
-                total = total + despesa.price
-                return (
-                  <tr key={despesa.id} className="table-hover">
-                    <td className="table-row">{despesa.description}</td>
-                    <td className="table-row">{dayjs(despesa.dueDate).format('DD/MM/YYYY')}</td>
-                    <td className="table-row">{dayjs(despesa.paymentDate).format('DD/MM/YYYY')}</td>
-                    <td className="table-row">{despesa.price} €</td>
-                    <td className="table-row">
-                      {despesa.paid === false && <span>A Pagar</span>}
-                      {despesa.paid === true && <span>Pago</span>}
-                    </td>
-                  </tr>
-                )
-              })}
-              <tr className="table-head ">
-                <td className="table-row"></td>
-                <td className="table-row"></td>
-                <td className="table-row">Total</td>
-                <td className="table-row">{total.toFixed(2)} €</td>
-                <td className="table-row"></td>
-              </tr>
-            </tbody>
-          </table>
+          {despesas && despesas.findAllDespesas &&
+            <div className="inline-block flex flex-col mt-8">
+              <div className="py-2 overflow-x-auto sm:-mx-6 sm:px-6 lg:pr-20">
+                <div className="align-middle inline-block min-w-full shadow overflow-hidden sm:rounded-lg border-b border-gray-200">
+                  <Table>
+                    <Table.Head>
+                      <Table.Th>Descrição</Table.Th>
+                      <Table.Th>Data de Vencimento</Table.Th>
+                      <Table.Th>Data do pagamento</Table.Th>
+                      <Table.Th>Valor</Table.Th>
+                      <Table.Th>Status</Table.Th>
+                    </Table.Head>
+                    <Table.Body>
+                      {despesas.findAllDespesas.map((despesa) => {
+                        total = total + despesa.price
+                        return (
+                          <Table.Tr key={despesa.id} className="table-hover">
+                            <Table.Td>{despesa.description}</Table.Td>
+                            <Table.Td>{dayjs(despesa.dueDate).format('DD/MM/YYYY')}</Table.Td>
+                            <Table.Td>{dayjs(despesa.paymentDate).format('DD/MM/YYYY')}</Table.Td>
+                            <Table.Td>{despesa.price} €</Table.Td>
+                            <Table.Td>
+                              {despesa.paid === false && <span>A Pagar</span>}
+                              {despesa.paid === true && <span>Pago</span>}
+                            </Table.Td>
+                          </Table.Tr>
+                        )
+                      })}
+                      <Table.Tr>
+                        <Table.Td></Table.Td>
+                        <Table.Td></Table.Td>
+                        <Table.Td>Total</Table.Td>
+                        <Table.Td>{total.toFixed(2)} €</Table.Td>
+                        <Table.Td></Table.Td>
+                      </Table.Tr>
+                    </Table.Body>
+                  </Table>
+                </div>
+              </div>
+            </div>
+          }
         </div>
       </div>
-    )
-  }
-  return (
-    <div>
-      {props.errors.map(erro => {
-        return <p>{JSON.stringify(erro.message, null, 2)}</p>
-      })}
-    </div>
+    </Layout>
   )
-}
-
-export default Despesas
-
-export async function getServerSideProps({ req, res }) {
-  const session = await auth0.getSession(req)
-  if (session) {
-    const data = await fetch('https://mamanagerapi.herokuapp.com/graphql', {
-      method: 'post',
-      headers: {
-        'Content-type': 'application/json',
-        Accept: 'application/json',
-        Authorization:
-          `${process.env.BEARER}`,
-      },
-      body: JSON.stringify({
-        query: `{
-            findAllDespesas(user:"${session.user.email}"){
-              id
-              description
-              price
-              dueDate
-              referenceMonth
-              paymentDate
-              paid
-            }
-          }`,
-      }),
-    })
-    const despesasDB = await data.json()
-    const despesas = despesasDB.data
-    let errors = null
-    if (despesasDB.errors) {
-      errors = despesasDB.errors
-    }
-    return {
-      props: {
-        errors,
-        user: session.user,
-        data: despesas,
-      },
-    }
-  }
-  return {
-    props: {
-      user: 'Usuário não logado',
-      data: 'Dados inacessíveis',
-    },
-  }
-}
+})

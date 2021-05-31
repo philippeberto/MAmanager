@@ -5,7 +5,6 @@ import Link from 'next/link'
 import { useQuery } from '../lib/graphql'
 import dayjs from 'dayjs'
 import CardStat from '../Components/CardStat'
-import { MdPeople, MdEuroSymbol } from 'react-icons/md'
 import Layout from '../Components/Layout/index'
 import { FaBalanceScale, FaBoxOpen, FaCashRegister, FaDollarSign, FaRegCalendar, FaWallet } from 'react-icons/fa'
 

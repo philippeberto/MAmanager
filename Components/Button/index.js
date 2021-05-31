@@ -21,7 +21,7 @@ const Cancel = ({ href, children }) => {
 const ButtonLink = ({ href, children }) => {
   return (
     <Link href={href} >
-      <a className="bg-red-900 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">{children}</a>
+      <a className="bg-blueTheme hover:bg-green-700 text-white font-bold py-2 px-4 rounded">{children}</a>
     </Link>
   )
 }

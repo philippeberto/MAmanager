@@ -7,32 +7,32 @@ import Title from '../../Components/Title'
 import Button from '../../Components/Button'
 import Input from '../../Components/Input'
 import Select from '../../Components/Select'
-import { useUser } from '@auth0/nextjs-auth0'
-import { useMutation } from '../../lib/graphql'
+import { useUser, withPageAuthRequired } from '@auth0/nextjs-auth0'
+import { useMutation, useQuery } from '../../lib/graphql'
 
 const CREATE_ALUNO = `
 mutation createAluno($user: String!,
-  $nome: String!,
-  $telemovel: String!
-  $ndata: Date!,
-  $responsavel: String,
-  $tresponsavel: String,
-  $endereco: String,
-  $localidade: String!,
-  $vdata: Int!,
-  $sexo: String!,
+  $name: String!,
+  $phone: String!
+  $birthDate: Date!,
+  $parent: String,
+  $parentPhone: String,
+  $address: String,
+  $location: String!,
+  $dueDate: Int!,
+  $gender: String!,
   $degree: Int!,
   $belt: Int!) {
     createAluno (user: $user, input: {
-    aluno: $nome
-    phone: $telemovel
-    birthDate: $ndata
-    parent: $responsavel
-    parentPhone: $tresponsavel
-    address: $endereco
-    location: $localidade
-    dueDate: $vdata
-    gender: $sexo
+      name: $name
+    phone: $phone
+    birthDate: $birthDate
+    parent: $parent
+    parentPhone: $parentPhone
+    address: $address
+    location: $location
+    dueDate: $dueDate
+    gender: $gender
     degree: $degree
     belt: $belt
     
@@ -43,54 +43,54 @@ mutation createAluno($user: String!,
 }
 `
 
-const CriarAluno = (props) => {
+export default withPageAuthRequired(function AddAluno() {
   const router = useRouter()
   const { user, error, isLoading } = useUser()
   const [data, createAluno] = useMutation(CREATE_ALUNO)
-
+  useQuery()
 
   const { handleSubmit, handleChange, setFieldValue, values, touched, errors } = useFormik({
     initialValues: {
       user: '',
-      nome: '',
-      telemovel: '',
-      ndata: '',
-      endereco: '',
-      localidade: '',
-      vdata: '',
-      sexo: '',
-      responsavel: '',
-      tresponsavel: '',
-      degree: '',
-      belt: ''
+      name: '',
+      phone: '',
+      birthDate: '',
+      parent: '',
+      parentPhone: '',
+      address: '',
+      location: '',
+      dueDate: '',
+      gender: '',
+      belt: '',
+      degree: ''
     },
     validationSchema: Yup.object({
-      nome: Yup.string()
+      name: Yup.string()
         .min(2, 'Deve ter no mínimo 2 caracteres')
         .max(50, 'Deve ter no máximo 50 caracteres')
         .required('Obrigatório'),
-      telemovel: Yup.string()
+      phone: Yup.string()
         .min(9, 'Deve ter no mínimo 9 caracteres')
         .max(13, 'Deve ter no máximo 13 caracteres')
         .required('Obrigatório'),
-      ndata: Yup.date().required('Obrigatório'),
-      endereco: Yup.string()
+      birthDate: Yup.date().required('Obrigatório'),
+      address: Yup.string()
         .max(100, 'Endereço deve ter no máximo 100 caracteres'),
-      localidade: Yup.string()
+      location: Yup.string()
         .min(3, 'Deve ter no máximo 30 caracteres')
         .max(30, 'Deve ter no máximo 30 caracteres')
         .required('Obrigatório'),
-      vdata: Yup.number()
+      dueDate: Yup.number()
         .typeError('Insira um número.')
         .min(1, 'Insira um valor entre 01 e 31')
         .max(31, 'Insira um valor entre 01 e 31')
         .required('Obrigatório'),
-      sexo: Yup.string().required('Obrigatório'),
-      responsavel: Yup.string().max(
+      gender: Yup.string().required('Obrigatório'),
+      parent: Yup.string().max(
         50,
         'O nome deve ter no máximo 50 caracteres',
       ),
-      tresponsavel: Yup.string()
+      parentPhone: Yup.string()
         .max(13, 'O telemóvel deve ter no máximo'),
       belt: Yup.string()
         .required('Obrigatório'),
@@ -100,10 +100,10 @@ const CriarAluno = (props) => {
         .required('Obrigatório')
     }),
     onSubmit: async (values) => {
-      const vencimento = parseInt(values.vdata)
+      const vencimento = parseInt(values.dueDate)
       const grau = parseInt(values.degree)
       const faixa = parseInt(values.belt)
-      values.vdata = vencimento
+      values.dueDate = vencimento
       values.degree = grau
       values.belt = faixa
       const data = await createAluno(values)
@@ -116,165 +116,157 @@ const CriarAluno = (props) => {
       setFieldValue('user', user.email)
     }
   }, [user])
-  if (user) {
-    return (
-      <Layout>
-        <Title>Novo Aluno</Title>
-        <div className='my-4'>
-          <Button.LinkOut href='/alunos'>Voltar</Button.LinkOut>
-        </div>
-        <div className="flex mt-8 ">
-          <div className="align-middle inline-block bg-white shadow overflow-hidden sm:rounded-lg border-b border-gray-200 p-12 w-3/4">
-            <form onSubmit={handleSubmit}>
-              <Input name='nome'
-                placeholder='Nome'
+  return (
+    <Layout>
+      <Title>Novo Aluno</Title>
+      <div className='my-4'>
+        <Button.LinkOut href='/alunos'>Voltar</Button.LinkOut>
+      </div>
+      <div className="flex mt-8 ">
+        <div className="align-middle inline-block bg-white shadow overflow-hidden sm:rounded-lg border-b border-gray-200 p-12 w-3/4">
+          <form onSubmit={handleSubmit}>
+            <Input name='name'
+              placeholder='Nome'
+              onChange={handleChange}
+              value={values.name}
+              type='text'
+              errors={errors.name}
+            />
+            <div className='w-1/5 inline-block'>
+              <Select
+                value={values.belt}
                 onChange={handleChange}
-                value={values.nome}
-                type='text'
-                errors={errors.nome}
+                id="masculino"
+                name="belt"
+                initial={{ id: 100, value: 'Selecione uma Graduação...' }}
+                options={[
+                  { id: 0, value: "Branca" },
+                  { id: 1, value: "Azul" },
+                  { id: 2, value: "Roxa" },
+                  { id: 3, value: "Marrom" },
+                  { id: 4, value: "Preta" },
+                ]}
+                placeholder='Faixa'
+                errors={errors.belt}
               />
-              <div className='w-1/5 inline-block'>
-                <Select
-                  value={values.belt}
+            </div>
+            <div className='w-14 inline-block mx-2'>
+              <Select
+                value={values.degree}
+                onChange={handleChange}
+                id="masculino"
+                name="degree"
+                initial={{ id: '', value: 'Grau...' }}
+                options={[
+                  { id: 0, value: 0 },
+                  { id: 1, value: 1 },
+                  { id: 2, value: 2 },
+                  { id: 3, value: 3 },
+                  { id: 4, value: 4 }
+                ]}
+                placeholder='Grau'
+                errors={errors.degree}
+              />
+            </div>
+            <div className='w-1/3 inline-block'>
+              <Input
+                value={values.phone}
+                onChange={handleChange}
+                type="text"
+                id="phone"
+                name="phone"
+                placeholder='Telemóvel'
+                errors={errors.phone}
+              />
+            </div>
+            <div className='w-1/3 inline-block ml-2'>
+              <Input
+                value={values.birthDate}
+                onChange={handleChange}
+                type="date"
+                id="birthDate"
+                name="birthDate"
+                placeholder='Data de Nascimento'
+                errors={errors.birthDate}
+              />
+            </div>
+            <Input
+              value={values.address}
+              onChange={handleChange}
+              type="text"
+              id="address"
+              name="address"
+              placeholder='Endereço'
+              errors={errors.address}
+            ></Input>
+            <div>
+              <div className='w-1/3 inline-block'>
+                <Input
+                  value={values.location}
                   onChange={handleChange}
-                  id="masculino"
-                  name="belt"
-                  initial={{ id: 100, value: 'Selecione uma Graduação...' }}
-                  options={[
-                    { id: 0, value: "Branca" },
-                    { id: 1, value: "Azul" },
-                    { id: 2, value: "Roxa" },
-                    { id: 3, value: "Marrom" },
-                    { id: 4, value: "Preta" },
-                  ]}
-                  placeholder='Faixa'
-                  errors={errors.belt}
+                  type="text"
+                  id="location"
+                  name="location"
+                  placeholder='Localidade'
+                  errors={errors.location}
                 />
               </div>
-              <div className='w-14 inline-block mx-2'>
-                <Select
-                  value={values.degree}
+              <div className='w-1/3 px-2 inline-block'>
+                <Input
+                  value={values.dueDate}
                   onChange={handleChange}
-                  id="masculino"
-                  name="degree"
-                  initial={{ id: '', value: 'Grau...' }}
-                  options={[
-                    { id: 0, value: 0 },
-                    { id: 1, value: 1 },
-                    { id: 2, value: 2 },
-                    { id: 3, value: 3 },
-                    { id: 4, value: 4 }
-                  ]}
-                  placeholder='Grau'
-                  errors={errors.degree}
+                  type="text"
+                  id="dueDate"
+                  name="dueDate"
+                  placeholder='Dia de vencimento'
+                  errors={errors.dueDate}
                 />
               </div>
               <div className='w-1/3 inline-block'>
+                <Select
+                  value={values.gender}
+                  onChange={handleChange}
+                  id="masculino"
+                  name="gender"
+                  initial={{ id: '', value: 'Selecione o Sexo...' }}
+                  options={[{ id: 'F', value: "Feminino" }, { id: 'M', value: "Masculino" }]}
+                  placeholder='Sexo'
+                  errors={errors.gender}
+                />
+              </div>
+            </div>
+            <div>
+              <div className='w-2/3 inline-block'>
                 <Input
-                  value={values.telemovel}
+                  value={values.parent}
                   onChange={handleChange}
                   type="text"
-                  id="telemovel"
-                  name="telemovel"
-                  placeholder='Telemóvel'
-                  errors={errors.telemovel}
-                />
+                  id="parent"
+                  name="parent"
+                  placeholder='Responsável'
+                  errors={errors.parent}
+                ></Input>
               </div>
-              <div className='w-1/3 inline-block ml-2'>
+              <div className='w-1/3 pl-2 inline-block'>
                 <Input
-                  value={values.ndata}
+                  value={values.parentPhone}
                   onChange={handleChange}
-                  type="date"
-                  id="ndata"
-                  name="ndata"
-                  placeholder='Data de Nascimento'
-                  errors={errors.ndata}
-                />
+                  type="text"
+                  id="parentPhone"
+                  name="parentPhone"
+                  placeholder='Tlm do Responsável'
+                  errors={errors.parentPhone}
+                ></Input>
               </div>
-              <Input
-                value={values.endereco}
-                onChange={handleChange}
-                type="text"
-                id="endereco"
-                name="endereco"
-                placeholder='Endereço'
-                errors={errors.endereco}
-              ></Input>
-              <div>
-                <div className='w-1/3 inline-block'>
-                  <Input
-                    value={values.localidade}
-                    onChange={handleChange}
-                    type="text"
-                    id="localidade"
-                    name="localidade"
-                    placeholder='Localidade'
-                    errors={errors.localidade}
-                  />
-                </div>
-                <div className='w-1/3 px-2 inline-block'>
-                  <Input
-                    value={values.vdata}
-                    onChange={handleChange}
-                    type="text"
-                    id="vdata"
-                    name="vdata"
-                    placeholder='Dia de vencimento'
-                    errors={errors.vdata}
-                  />
-                </div>
-                <div className='w-1/3 inline-block'>
-                  <Select
-                    value={values.sexo}
-                    onChange={handleChange}
-                    id="masculino"
-                    name="sexo"
-                    initial={{ id: '', value: 'Selecione o Sexo...' }}
-                    options={[{ id: 'F', value: "Feminino" }, { id: 'M', value: "Masculino" }]}
-                    placeholder='Sexo'
-                    errors={errors.sexo}
-                  />
-                </div>
-              </div>
-              <div>
-                <div className='w-2/3 inline-block'>
-                  <Input
-                    value={values.responsavel}
-                    onChange={handleChange}
-                    type="text"
-                    id="responsavel"
-                    name="responsavel"
-                    placeholder='Responsável'
-                    errors={errors.responsavel}
-                  ></Input>
-                </div>
-                <div className='w-1/3 pl-2 inline-block'>
-                  <Input
-                    value={values.tresponsavel}
-                    onChange={handleChange}
-                    type="text"
-                    id="tresponsavel"
-                    name="tresponsavel"
-                    placeholder='Tlm do Responsável'
-                    errors={errors.tresponsavel}
-                  ></Input>
-                </div>
-              </div>
-              <Button.Cancel href='/alunos'>Cancelar</Button.Cancel>
-              <div className='inline-block float-right -mt-2'><Button type="submit">Cadastrar</Button></div>
-            </form>
-            {
-              data && !!data.errors && <p className="bg-red-200 border-l-4 border-red-500 text-red-700 p-2 mb-4 w-auto mt-8">Ocorreu um erro ao salvar o dados. Contacte o administrador do sistema.</p>
-            }
-          </div>
+            </div>
+            <Button.Cancel href='/alunos'>Cancelar</Button.Cancel>
+            <div className='inline-block float-right -mt-2'><Button type="submit">Cadastrar</Button></div>
+          </form>
+          {
+            data && !!data.errors && <p className="bg-red-200 border-l-4 border-red-500 text-red-700 p-2 mb-4 w-auto mt-8">Ocorreu um erro ao salvar o dados. Contacte o administrador do sistema.</p>
+          }
         </div>
-      </Layout>
-    )
-  } else {
-    return (
-      <Layout>Não há sessão ativa.</Layout>
-    )
-  }
-}
-
-export default CriarAluno
+      </div>
+    </Layout>
+  )
+})

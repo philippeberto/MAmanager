@@ -1,47 +1,27 @@
-import React from "react";
-import auth0 from "../lib/auth0";
+import { useUser, withPageAuthRequired } from '@auth0/nextjs-auth0'
+import React from "react"
+import Layout from '../Components/Layout'
 
-const Usuario = (props) => {
-  if (!props.errors) {
-    const img = props.user.picture;
-    return (
+export default withPageAuthRequired(Usuario => {
+  const { user, error, isLoading } = useUser()
 
+  if (error) return (<div>Ocorreu um erro.<p>{JSON.stringify(error)}</p></div>)
+  if (isLoading) return (<div>Carregando...</div>)
+  if (user) return (
+    <Layout>
       <div className="profile ">
-        <img src={img} alt="imagem de perfil" className="imgprofile" />
+        <img src={user.picture} alt="imagem de perfil" className="imgprofile" />
         <div className="profile profile-itens">
-          Nome: {props.user.name}
+          Nome: {user.name}
           <br />
-        E-mail: {props.user.email}
+        E-mail: {user.email}
         </div>
       </div>
-    )
-  }
+    </Layout>
+  )
   return (
     <div>
-      {props.errors.map(erro => {
-        return <p>{JSON.stringify(erro.message, null, 2)}</p>
-      })}
+      Não há nenhuma sessão ativa.
     </div>
   )
-};
-
-export default Usuario;
-
-export async function getServerSideProps({ req, res }) {
-  const session = await auth0.getSession(req);
-  console.log(session)
-  if (session) {
-    return {
-      props: {
-        user: session.user,
-      },
-    };
-  } else {
-    return {
-      props: {
-        user: 'Usuário não logado',
-        data: 'Dados Inacessíveis'
-      }
-    };
-  }
-}
+})

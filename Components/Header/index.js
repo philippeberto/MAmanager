@@ -20,7 +20,7 @@ const Header = () => {
     setSideBarOpen(true)
   }
   return (
-    <header className="flex justify-between items-center py-2 px-6 text-gray-100 bg-blueTheme border-b-4 border-blueTheme-dark">
+    <header className="flex justify-between items-center py-2 px-6 text-gray-100 bg-blueTheme-dark border-b-4 border-blueTheme-dark">
 
       <div className="flex items-center">
         <button onClick={open} className="focus:outline-none lg:hidden">
@@ -113,8 +113,12 @@ const Header = () => {
               "absolute right-0 mt-2 w-48 bg-white rounded-md overflow-hidden shadow-xl z-10"
             }
           >
+
+            <Link href="/usuario">
+              <a className="block px-4 py-2 text-sm text-gray-700 hover:bg-blueTheme-dark hover:text-white">Perfil</a>
+            </Link>
             <Link href="/api/auth/logout">
-              <a className="block px-4 py-2 text-sm text-gray-700 hover:bg-indigo-600 hover:text-white">Sair</a>
+              <a className="block px-4 py-2 text-sm text-gray-700 hover:bg-blueTheme-dark hover:text-white">Sair</a>
             </Link>
 
           </div>}

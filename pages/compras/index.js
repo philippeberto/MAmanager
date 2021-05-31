@@ -1,104 +1,72 @@
 import React from 'react'
-import auth0 from '../../lib/auth0'
 import dayjs from 'dayjs'
 import Link from 'next/link'
+import { useUser, withPageAuthRequired } from '@auth0/nextjs-auth0'
+import { useQuery } from '../../lib/graphql'
+import Table from '../../Components/Table'
+import Layout from '../../Components/Layout'
+import Button from '../../Components/Button'
+import Title from '../../Components/Title'
 
-const Compras = (props) => {
+export default withPageAuthRequired(Compras => {
+
+  const { user, error, isLoading } = useUser()
+  const { data: compras, mutate } = useQuery(`{
+    findAllCompras(user:"${user.email}"){
+      id
+      description
+      price
+      date
+    }
+  }`)
   let total = 0
-  if (!props.errors) {
-    return (
-      <div className="table-center">
-        <h2>Compras</h2>
-        <Link href="/compras/addCompra">
-          <a>Registar Compra</a>
-        </Link>
-        <div>
-          <table className="table">
-            <thead>
-              <tr>
-                <td className="table-head">Descrição</td>
-                <td className="table-head">Data</td>
-                <td className="table-head">Valor</td>
-              </tr>
-            </thead>
-            <tbody>
-              {props.data.findAllCompras.map((despesa) => {
-                total = total + despesa.price
-                return (
-                  <tr key={despesa.id} className="table-hover">
-                    <td className="table-row">{despesa.description}</td>
-                    <td className="table-row">{dayjs(despesa.date).format('DD/MM/YYYY')}</td>
-                    <td className="table-row">{despesa.price} €</td>
-                    <td className="table-row">
-                      {despesa.paid === false && <span>A Pagar</span>}
-                      {despesa.paid === true && <span>Pago</span>}
-                    </td>
-                  </tr>
-                )
-              })}
-              <tr className="table-head ">
-                <td className="table-row"></td>
-                <td className="table-row">Total</td>
-                <td className="table-row">{total} €</td>
-                <td className="table-row"></td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-    )
-  }
   return (
-    <div>
-      {props.errors.map(erro => {
-        return <p>{JSON.stringify(erro.message, null, 2)}</p>
-      })}
-    </div>
+    <Layout>
+      <Title>Compras</Title>
+      <div className='block my-4'>
+        <Button.Link href='#'>Registrar Compra</Button.Link>
+      </div>
+      <div>
+        {compras && compras.findAllCompras &&
+          <div className="inline-block flex flex-col mt-8">
+            <div className="py-2 overflow-x-auto sm:-mx-6 sm:px-6 lg:pr-20">
+              <div className="align-middle inline-block min-w-full shadow overflow-hidden sm:rounded-lg border-b border-gray-200">
+                <Table>
+                  <Table.Head>
+                    <Table.Th>Descrição</Table.Th>
+                    <Table.Th>Data</Table.Th>
+                    <Table.Th>Valor</Table.Th>
+                  </Table.Head>
+                  <Table.Body>
+                    {compras.findAllCompras.map((compra) => {
+                      total = total + compra.price
+                      return (
+                        <Table.Tr key={compra.id} >
+                          <Table.Td>
+                            <div className="flex mensalidades-center">
+                              <div className="ml-4">
+                                <div className="text-sm leading-5 font-medium text-gray-900">{compra.description}</div>
+                                <div className="text-sm leading-5 text-gray-500">{compra.id}</div>
+                              </div>
+                            </div>
+                          </Table.Td>
+                          <Table.Td>{dayjs(compra.date).format('DD/MM/YYYY')}</Table.Td>
+                          <Table.Td>{compra.price} €</Table.Td>
+                        </Table.Tr>
+                      )
+                    })}
+                    <Table.Tr >
+                      <Table.Td></Table.Td>
+                      <Table.Td>Total</Table.Td>
+                      <Table.Td>{total} €</Table.Td>
+                    </Table.Tr>
+                  </Table.Body>
+                </Table>
+              </div>
+            </div>
+          </div>
+        }
+      </div>
+    </Layout>
   )
-}
-
-export default Compras
-
-export async function getServerSideProps({ req, res }) {
-  const session = await auth0.getSession(req)
-  if (session) {
-    const data = await fetch('https://mamanagerapi.herokuapp.com/graphql', {
-      method: 'post',
-      headers: {
-        'Content-type': 'application/json',
-        Accept: 'application/json',
-        Authorization:
-          `${process.env.BEARER}`,
-      },
-      body: JSON.stringify({
-        query: `{
-            findAllCompras(user:"${session.user.email}"){
-              id
-              description
-              price
-              date
-            }
-          }`,
-      }),
-    })
-    const despesasDB = await data.json()
-    const despesas = despesasDB.data
-    let errors = null
-    if (despesasDB.errors) {
-      errors = despesasDB.errors
-    }
-    return {
-      props: {
-        errors,
-        user: session.user,
-        data: despesas,
-      },
-    }
-  }
-  return {
-    props: {
-      user: 'Usuário não logado',
-      data: 'Dados inacessíveis',
-    },
-  }
-}
+})

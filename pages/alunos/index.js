@@ -5,6 +5,7 @@ import CardAluno from '../../Components/CardAluno'
 import Title from '../../Components/Title/index'
 import Button from '../../Components/Button/index'
 import Layout from '../../Components/Layout'
+import { withPageAuthRequired } from '@auth0/nextjs-auth0'
 
 const REMOVE_ALUNO = `
 mutation removeAluno ($user: String!, $id: String!) {
@@ -15,14 +16,14 @@ mutation removeAluno ($user: String!, $id: String!) {
 }
 `
 
-const Alunos = () => {
+export default withPageAuthRequired(function Alunos() {
   const { user, error, isLoading } = useUser()
   const [deleteData, deleteProduct] = useMutation(REMOVE_ALUNO)
 
   const { data: alunos, mutate } = useQuery(`{
-    findAllAlunos(user: "philippe.bjj@gmail.com") {
+    findAllAlunos(user: "${user.email}") {
       id
-      aluno
+      name
       birthDate
       belt
       degree
@@ -46,7 +47,6 @@ const Alunos = () => {
           <div className='my-4'>
             <Button.Link href='./alunos/addAluno'>Novo Aluno</Button.Link>
           </div>
-          <input type="text"></input>
 
         </div>
 
@@ -56,7 +56,7 @@ const Alunos = () => {
               key={aluno.id}
               user={user.email}
               id={aluno.id}
-              name={aluno.aluno}
+              name={aluno.name}
               birthDate={aluno.birthDate}
               belt={aluno.belt}
               degree={aluno.degree}
@@ -75,7 +75,4 @@ const Alunos = () => {
       )}
     </Layout>
   )
-}
-
-export default Alunos
-
+})

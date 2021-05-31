@@ -1,106 +1,73 @@
 import React from 'react'
-import auth0 from '../../lib/auth0'
 import dayjs from 'dayjs'
-import Link from 'next/link'
+import { useUser, withPageAuthRequired } from '@auth0/nextjs-auth0'
+import Layout from '../../Components/Layout'
+import { useQuery } from '../../lib/graphql'
+import Title from '../../Components/Title'
+import Button from '../../Components/Button'
+import Table from '../../Components/Table'
+import { MdEuroSymbol } from 'react-icons/md'
 
-const Seguros = (props) => {
-  if (!props.errors) {
-    return (
-      <div className="table-center">
-        <h2>Seguros</h2>
-        <Link href="/seguros/addSeguro">
-          <a>Registar Seguro</a>
-        </Link>
-        <div>
-          <table className="table">
-            <thead>
-              <tr>
-                <td className="table-head">ID Aluno</td>
-                <td className="table-head">Validade</td>
-                <td className="table-head">Status</td>
-              </tr>
-            </thead>
-            <tbody>
-              {props.data.findAllSeguros.map((seguro) => {
-                return (
-                  <tr key={seguro.id} className="table-hover">
-                    <td className="table-row">{seguro.idAluno}</td>
-                    <td className="table-row">{dayjs(seguro.fdate).format('DD/MM/YYYY')}</td>
-                    <td className="table-row">{dayjs().isBefore(dayjs(seguro.fdate)) ? <pre>Válido</pre> : <pre>Vencido</pre>}</td>
-                  </tr>
-                )
-              })}
-            </tbody>
-          </table>
-        </div>
-        <pre>{props.data.findAllSeguros.status}</pre>
+export default withPageAuthRequired(Seguros => {
+  const { user, error, isLoading } = useUser()
+  const { data: seguros, mutate } = useQuery(`{
+    findAllSeguros(user:"${user.email}"){
+      id
+      idAluno
+      idate
+      fdate
+      price
+    }
+  }`)
+
+  if (error) return (<div>Ocorreu um erro.<p>{JSON.stringify(error)}</p></div>)
+  if (isLoading) return (<div>Carregando...</div>)
+  if (user) return (
+    <Layout>
+      <Title>Seguros</Title>
+      <div className='my-4'>
+        <Button.Link href="#">Registar Seguro</Button.Link>
       </div>
-
-    )
-  }
-  return (
-    <div>
-      {props.errors.map(erro => {
-        return <p>{JSON.stringify(erro.message, null, 2)}</p>
-      })}
-    </div>
+      <div>
+        {seguros && seguros.findAllSeguros &&
+          <div className="inline-block flex flex-col mt-8">
+            <div className="py-2 overflow-x-auto sm:-mx-6 sm:px-6 lg:pr-20">
+              <div className="align-middle inline-block min-w-full shadow overflow-hidden sm:rounded-lg border-b border-gray-200">
+                <Table>
+                  <Table.Head>
+                    <Table.Th>Aluno</Table.Th>
+                    <Table.Th>Status</Table.Th>
+                    <Table.Th>Valor</Table.Th>
+                  </Table.Head>
+                  <Table.Body>
+                    {seguros.findAllSeguros.map((seguro) => {
+                      return (
+                        <Table.Tr key={seguro.id}>
+                          <Table.Td className="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
+                            <div className="flex mensalidades-center">
+                              <div className="ml-4">
+                                <div className="text-sm leading-5 font-medium text-gray-900">Aluno.nome</div>
+                                <div className="text-sm leading-5 text-gray-500">Seguro: {seguro.id}</div>
+                              </div>
+                            </div>
+                          </Table.Td>
+                          <Table.Td
+                            className="px-6 py-4 whitespace-no-wrap text-right border-b border-gray-200 text-sm leading-5 font-medium">
+                            <div>{dayjs(seguro.fdate).format('DD/MM/YYYY')}</div>
+                          </Table.Td>
+                          <Table.Td
+                            className="px-6 py-4 whitespace-no-wrap text-right border-b border-gray-200 text-sm leading-5 font-medium">
+                            <div className="inline-flex ">{seguro.price}<MdEuroSymbol className='mt-1 ml-2' /></div>
+                          </Table.Td>
+                        </Table.Tr>)
+                    })}
+                  </Table.Body>
+                </Table>
+              </div>
+            </div>
+          </div>
+        }
+      </div>
+    </Layout>
   )
-}
-
-export default Seguros
-
-export async function getServerSideProps({ req, res }) {
-  const session = await auth0.getSession(req)
-  if (session) {
-    const data = await fetch('https://mamanagerapi.herokuapp.com/graphql', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Accept: 'application/json',
-        Authorization:
-          `${process.env.BEARER}`,
-      },
-      body: JSON.stringify({
-        query: `{
-          findAllSeguros(user:"${session.user.email}"){
-            id
-            idAluno
-            idate
-            fdate
-            price
-          }
-        }`,
-      }),
-    })
-    const segurosDB = await data.json()
-    const seguros = segurosDB.data
-    let errors = null
-    if (segurosDB.errors) {
-      errors = segurosDB.errors
-    }
-    if (seguros) {
-      return {
-        props: {
-          errors,
-          user: session.user,
-          data: seguros,
-        },
-      }
-    } else {
-      return {
-        props: {
-          errors,
-          user: session.user,
-          data: [],
-        },
-      }
-    }
-  }
-
-  return {
-    props: {
-      user: 'Usuário não logado',
-      data: 'Dados inacessíveis',
-    },
-  }
-}
+})
