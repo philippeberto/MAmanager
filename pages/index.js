@@ -141,3 +141,11 @@ const Index = () => {
 }
 
 export default Index
+
+//to use getServerSideProps
+
+// export const getServerSideProps = (...args) => withPageAuthRequired({
+//   getServerSideProps: () => ({
+//     props: {foo: 'bar'}
+//   })
+// })(...args);
