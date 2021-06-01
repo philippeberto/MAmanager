@@ -2,4 +2,3 @@ node_modules
 .env.local
 .env
 .next
-package-lock.json
