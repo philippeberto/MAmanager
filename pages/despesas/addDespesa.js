@@ -104,25 +104,6 @@ const CriarDespesa = (props) => {
 
 export default CriarDespesa
 
-export async function getServerSideProps({ req, res }) {
-  const session = await auth0.getSession(req)
-  const bearer = process.env.BEARER
-  if (session) {
-    return {
-      props: {
-        user: session.user,
-        bearer
-      },
-    }
-  }
-  return {
-    props: {
-      user: 'Usuário não logado',
-      data: 'Dados inacessíveis',
-    },
-  }
-}
-
 const salvarDespesa = async (despesa, email, bearer) => {
   const data = await fetch('https://mamanagerapi.herokuapp.com/graphql', {
     method: 'POST',

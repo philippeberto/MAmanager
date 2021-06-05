@@ -1,6 +1,6 @@
 import { UserProvider } from '@auth0/nextjs-auth0'
 import React from 'react'
-import '../styles/styles.css'
+import 'tailwindcss/tailwind.css'
 
 const MyApp = ({ Component, pageProps }) => {
 
