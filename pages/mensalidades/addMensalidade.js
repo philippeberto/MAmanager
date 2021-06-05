@@ -6,13 +6,13 @@ import { useUser, withPageAuthRequired } from '@auth0/nextjs-auth0'
 import { useMutation } from '../../lib/graphql'
 
 const CREATE_MENSALIDADE = `
-mutation createAluno($user: String!,
+mutation createMensalidade($user: String!,
   idAluno: String!,
   price: Float!,
   paymentDate: String!,
   start: String!,
   end: String) {
-    createAluno (user: $user, input: {
+    createMensalidade (user: $user, input: {
       idAluno: $idAluno
       price: $price
       paymentDate: $paymentDate
@@ -24,7 +24,7 @@ mutation createAluno($user: String!,
   }
 `
 
-export default withPageAuthRequired(CriarMensalidade = () => {
+export default withPageAuthRequired(AddMensalidade => {
   const router = useRouter()
   const { user, error, isLoading } = useUser()
   const [data, createMensalidade] = useMutation(CREATE_MENSALIDADE)
@@ -46,10 +46,10 @@ export default withPageAuthRequired(CriarMensalidade = () => {
       period: Yup.number(),
     }),
     onSubmit: (values) => {
-      salvarMensalidade(values, props.user.email, props.bearer)
-      alert(
-        `idAluno: ${values.idAluno},price: ${values.price},paymentDate: ${values.paymentDate},period: ${values.period}`,
-      )
+      // salvarMensalidade(values, props.user.email, props.bearer)
+      // alert(
+      //   `idAluno: ${values.idAluno},price: ${values.price},paymentDate: ${values.paymentDate},period: ${values.period}`,
+      // )
     },
   })
 
@@ -112,26 +112,3 @@ export default withPageAuthRequired(CriarMensalidade = () => {
     </div>
   )
 })
-
-const salvarMensalidade = async (mensalidade, user, bearer) => {
-  const data = await fetch('https://mamanagerapi.herokuapp.com/graphql', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      Accept: 'application/json',
-      Authorization:
-        `${bearer}`,
-    },
-    body: JSON.stringify({
-      query: `mutation{
-        createMensalidade(user:"${user}", input: {
-          idAluno: "${mensalidade.idAluno}",
-          price: ${parseFloat(mensalidade.price)},
-          paymentDate: "${mensalidade.paymentDate}",
-          period: ${mensalidade.period}
-        })
-      }`,
-    }),
-  })
-  console.log(data)
-}
