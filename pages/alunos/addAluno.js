@@ -47,7 +47,6 @@ export default withPageAuthRequired(function AddAluno() {
   const router = useRouter()
   const { user, error, isLoading } = useUser()
   const [data, createAluno] = useMutation(CREATE_ALUNO)
-  useQuery()
 
   const { handleSubmit, handleChange, setFieldValue, values, touched, errors } = useFormik({
     initialValues: {

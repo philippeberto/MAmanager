@@ -1,14 +1,40 @@
 import React from 'react'
 import { useFormik } from 'formik'
 import * as Yup from 'yup'
+import { useRouter } from 'next/router'
+import { useUser } from '@auth0/nextjs-auth0'
+import { useMutation } from '../../lib/graphql'
 
-const CriarMensalidade = (props) => {
+const CREATE_MENSALIDADE = `
+mutation createAluno($user: String!,
+  idAluno: String!,
+  price: Float!,
+  paymentDate: String!,
+  start: String!,
+  end: String) {
+    createAluno (user: $user, input: {
+      idAluno: $idAluno
+      price: $price
+      paymentDate: $paymentDate
+      period: {
+        start: $start
+        end: $end
+      }
+    }) 
+  }
+`
+
+export default withPageAuthRequired(CriarMensalidade = () => {
+  const router = useRouter()
+  const { user, error, isLoading } = useUser()
+  const [data, createMensalidade] = useMutation(CREATE_MENSALIDADE)
+
   const { handleSubmit, handleChange, values, touched, errors } = useFormik({
     initialValues: {
       idAluno: '',
       price: '',
       paymentDate: '',
-      monthPaid: '',
+      period: '',
     },
     validationSchema: Yup.object({
       idAluno: Yup.string()
@@ -17,12 +43,12 @@ const CriarMensalidade = (props) => {
         .required('Obrigatório'),
       price: Yup.number().required('Obrigatório'),
       paymentDate: Yup.date(),
-      monthPaid: Yup.number(),
+      period: Yup.number(),
     }),
     onSubmit: (values) => {
       salvarMensalidade(values, props.user.email, props.bearer)
       alert(
-        `idAluno: ${values.idAluno},price: ${values.price},paymentDate: ${values.paymentDate},monthPaid: ${values.monthPaid}`,
+        `idAluno: ${values.idAluno},price: ${values.price},paymentDate: ${values.paymentDate},period: ${values.period}`,
       )
     },
   })
@@ -69,44 +95,25 @@ const CriarMensalidade = (props) => {
           ) : null}
         </div>
         <div>
-          <label htmlFor="monthPaid">Mês Pago: </label>
+          <label htmlFor="period">Mês Pago: </label>
           <input
-            value={values.monthPaid}
+            value={values.period}
             onChange={handleChange}
             type="text"
-            id="monthPaid"
-            name="monthPaid"
+            id="period"
+            name="period"
           />
-          {touched.monthPaid && errors.monthPaid ? (
-            <text>{errors.monthPaid}</text>
+          {touched.period && errors.period ? (
+            <text>{errors.period}</text>
           ) : null}
         </div>
         <input type="submit" value="Cadastrar"></input>
       </form>
     </div>
   )
-}
+})
 
 export default CriarMensalidade
-
-export async function getServerSideProps({ req, res }) {
-  const session = await auth0.getSession(req)
-  const bearer = process.env.BEARER
-  if (session) {
-    return {
-      props: {
-        user: session.user,
-        bearer
-      },
-    }
-  }
-  return {
-    props: {
-      user: 'Usuário não logado',
-      data: 'Dados inacessíveis',
-    },
-  }
-}
 
 const salvarMensalidade = async (mensalidade, user, bearer) => {
   const data = await fetch('https://mamanagerapi.herokuapp.com/graphql', {
@@ -123,7 +130,7 @@ const salvarMensalidade = async (mensalidade, user, bearer) => {
           idAluno: "${mensalidade.idAluno}",
           price: ${parseFloat(mensalidade.price)},
           paymentDate: "${mensalidade.paymentDate}",
-          monthPaid: ${mensalidade.monthPaid}
+          period: ${mensalidade.period}
         })
       }`,
     }),
