@@ -113,8 +113,6 @@ export default withPageAuthRequired(CriarMensalidade = () => {
   )
 })
 
-export default CriarMensalidade
-
 const salvarMensalidade = async (mensalidade, user, bearer) => {
   const data = await fetch('https://mamanagerapi.herokuapp.com/graphql', {
     method: 'POST',
