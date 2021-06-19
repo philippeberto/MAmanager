@@ -1,6 +1,6 @@
 import React from 'react'
 import { useMutation, useQuery } from '../../lib/graphql'
-import { useUser } from '@auth0/nextjs-auth0'
+import { getAccessToken, useUser } from '@auth0/nextjs-auth0'
 import CardAluno from '../../Components/CardAluno'
 import Title from '../../Components/Title/index'
 import Button from '../../Components/Button/index'
@@ -79,3 +79,8 @@ export default withPageAuthRequired(function Alunos() {
     </Layout>
   )
 })
+
+export async function getServerSideProps(req, res) {
+  const { accessToken } = await getAccessToken(req, res)
+  console.log(accessToken)
+}
